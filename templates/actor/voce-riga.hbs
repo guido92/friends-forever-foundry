@@ -1,0 +1,16 @@
+<li class="ff-voce {{#if rimosso}}is-removed{{/if}} {{#if indistruttibile}}is-indestructible{{/if}}" data-item-id="{{id}}">
+  <div class="ff-voce-text">{{{descrizione}}}</div>
+  <div class="ff-voce-meta">
+    {{#if indistruttibile}}<span class="ff-tag ff-tag-ind" title="Indistruttibile: non può essere rimossa e vale doppio"><i class="fa-solid fa-infinity"></i> Indistruttibile</span>{{/if}}
+    {{#if con}}<span class="ff-tag">con {{con}}</span>{{/if}}
+    {{#if fase}}<span class="ff-tag">{{fase}}</span>{{/if}}
+    {{#if rimosso}}<span class="ff-tag ff-tag-rem">rimossa</span>{{/if}}
+  </div>
+  {{#if rimossoRacconto}}<div class="ff-voce-rimossa">{{rimossoRacconto}}</div>{{/if}}
+  <div class="ff-voce-actions">
+    <a data-action="editVoce" title="Apri"><i class="fa-solid fa-pen-to-square"></i></a>
+    {{#unless rimosso}}{{#unless indistruttibile}}<a data-action="removeVoce" title="Elimina dal foglio (racconta come)"><i class="fa-solid fa-eraser"></i></a>{{/unless}}{{/unless}}
+    {{#if rimosso}}<a data-action="restoreVoce" class="gm-only" title="Ripristina (GM)"><i class="fa-solid fa-rotate-left"></i></a>{{/if}}
+    {{#if canDelete}}<a data-action="deleteVoce" title="Cancella del tutto"><i class="fa-solid fa-trash"></i></a>{{/if}}
+  </div>
+</li>

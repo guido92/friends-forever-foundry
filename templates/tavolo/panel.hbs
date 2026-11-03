@@ -1,0 +1,132 @@
+<aside class="ff-panel">
+  <div class="ff-panel-scroll">
+    {{#unless hasGame}}
+      <section class="ff-box ff-welcome">
+        <h2>Friends Forever</h2>
+        <p>Un gioco di ruolo masterless sull'amicizia: dai 3 ai 60 anni, finché uno di voi non c'è più.</p>
+        {{#if isGM}}
+          <button type="button" class="ff-big" data-action="newGame"><i class="fa-solid fa-circle-play"></i> Nuova partita</button>
+        {{else}}
+          <p class="ff-hint">Aspetta che il GM inizi una nuova partita.</p>
+        {{/if}}
+      </section>
+    {{else}}
+      <section class="ff-box ff-phase">
+        <div class="ff-phase-title">
+          {{#if phaseNum}}<span class="ff-phase-n">Fase {{phaseNum}}/{{phaseTotal}}</span>{{/if}}
+          <strong>{{phaseLabel}}</strong>
+          {{#if solo}}<span class="ff-pill">solitario</span>{{/if}}{{#if demo}}<span class="ff-pill">dimostrativa</span>{{/if}}
+        </div>
+        <p class="ff-help">{{help}}</p>
+      </section>
+
+      <section class="ff-box">
+        <h3>Giocatori</h3>
+        <ul class="ff-players">
+          {{#each players}}
+            <li class="{{#if isTurn}}is-turn{{/if}}">
+              <span class="ff-marble ff-marble-sm" style="--marble: {{color}}"></span>
+              <a data-action="openSheet" data-actor="{{actorId}}" title="Apri il foglio">{{name}}</a>
+              {{#if isTurn}}<span class="ff-pill ff-pill-turn">di turno</span>{{/if}}
+              <span class="ff-tray" title="Biglie ancora da lanciare">{{#each leftArr}}<span class="ff-marble ff-marble-xs" style="--marble: {{../color}}"></span>{{/each}}</span>
+            </li>
+          {{/each}}
+          {{#each npcs}}
+            <li class="is-npc"><span class="ff-marble ff-marble-sm" style="--marble: {{color}}"></span> {{name}} <span class="ff-pill">PNG</span></li>
+          {{/each}}
+        </ul>
+      </section>
+
+      {{#if isTemi}}
+        <section class="ff-box">
+          <h3>Sezioni e Temi</h3>
+          <ol class="ff-sections">
+            {{#each sections}}
+              <li><span class="ff-secnum">{{num}}</span><input type="text" data-section="{{id}}" value="{{theme}}" maxlength="40" placeholder="una parola…"></li>
+            {{/each}}
+          </ol>
+          <div class="ff-buttons">
+            <button type="button" data-action="randomThemes"><i class="fa-solid fa-dice"></i> {{#if solo}}Tira i Temi{{else}}Suggerisci i vuoti{{/if}}</button>
+            <button type="button" data-action="rerollSections"><i class="fa-solid fa-shuffle"></i> Ridisegna Sezioni</button>
+            <button type="button" class="ff-big" data-action="beginThrows" {{#unless allThemes}}disabled title="Ogni Sezione ha bisogno di un Tema"{{/unless}}><i class="fa-solid fa-play"></i> Inizia i lanci</button>
+          </div>
+        </section>
+      {{/if}}
+
+      {{#if isLanci}}
+        {{#if pending}}
+          <section class="ff-box ff-groove">
+            <h3>Sul solco!</h3>
+            <div class="ff-buttons">
+              {{#each pending}}
+                <button type="button" data-action="chooseGroove" data-section="{{id}}" {{#unless ../canAct}}disabled{{/unless}}>Sezione {{num}} · {{theme}}</button>
+              {{/each}}
+            </div>
+          </section>
+        {{/if}}
+        {{#if awaiting}}
+          <section class="ff-box">
+            <div class="ff-buttons">
+              <button type="button" class="ff-big" data-action="advance" {{#unless canAct}}disabled{{/unless}}>
+                <i class="fa-solid fa-forward"></i> {{#if rethrow}}Rilancia{{else}}Ho raccontato: prossimo giocatore{{/if}}
+              </button>
+            </div>
+          </section>
+        {{/if}}
+      {{/if}}
+
+      {{#if isEpilogoLanci}}
+        {{#if awaiting}}
+          <section class="ff-box">
+            <div class="ff-buttons"><button type="button" class="ff-big" data-action="advance" {{#unless canAct}}disabled{{/unless}}><i class="fa-solid fa-forward"></i> Avanti</button></div>
+          </section>
+        {{/if}}
+        <section class="ff-box ff-endings">
+          <h3>Finali sulla Mappa</h3>
+          <ol class="ff-sections">
+            {{#each sections}}<li><span class="ff-secnum">{{num}}</span> {{theme}}</li>{{/each}}
+          </ol>
+        </section>
+      {{/if}}
+
+      {{#if isFineFase}}
+        <section class="ff-box">
+          <p>Incontri in questa Fase: <strong>{{encounters}}</strong>{{#unless encounters}} — le biglie non si sono mai incontrate: ognuno elimina un Legame.{{/unless}}</p>
+          {{#if lastPhase}}
+            <p class="ff-hint">Era l'ultima Fase: ora tocca all'Epilogo.</p>
+          {{else}}
+            <p class="ff-hint">Prossima: <strong>{{nextPhaseLabel}}</strong>{{#if nextDeath}} — prima si tira il Dado della Morte (Epilogo con {{nextDeath}}+){{/if}}.</p>
+          {{/if}}
+          <div class="ff-buttons">
+            <button type="button" class="ff-big" data-action="nextPhase"><i class="fa-solid fa-eraser"></i> {{#if lastPhase}}Vai all'Epilogo{{else}}Cancella la Mappa · Prossima Fase{{/if}}</button>
+          </div>
+        </section>
+      {{/if}}
+
+      {{#if isEpilogoScelta}}
+        <section class="ff-box">
+          <p>Sceglie <strong>{{deadName}}</strong>:</p>
+          <div class="ff-buttons">
+            {{#each tiedKinds}}<button type="button" data-action="chooseEnding" data-kind="{{kind}}" {{#unless ../iAmDead}}disabled{{/unless}}>{{label}}</button>{{/each}}
+          </div>
+        </section>
+      {{/if}}
+
+      {{#if isConcluso}}
+        <section class="ff-box ff-ending">
+          <h3>{{endingLabel}}</h3>
+          <p>Racconta l'Epitaffio: <strong>{{deadName}}</strong> per primo, poi gli altri in senso orario.</p>
+        </section>
+      {{/if}}
+
+      {{#if isGM}}
+        <section class="ff-box ff-gm">
+          <div class="ff-buttons">
+            <button type="button" data-action="newGame"><i class="fa-solid fa-circle-play"></i> Nuova partita</button>
+            <button type="button" data-action="reset"><i class="fa-solid fa-xmark"></i> Termina</button>
+          </div>
+        </section>
+      {{/if}}
+    {{/unless}}
+  </div>
+</aside>

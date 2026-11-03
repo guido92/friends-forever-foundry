@@ -1,0 +1,26 @@
+{
+  "TYPES": {
+    "Actor": {
+      "personaggio": "Personaggio"
+    },
+    "Item": {
+      "legame": "Legame",
+      "problematica": "Problematica"
+    }
+  },
+  "FF": {
+    "Title": "Friends Forever",
+    "Table": "Il Tavolo",
+    "OpenTable": "Apri il Tavolo di gioco",
+    "Settings": {
+      "ShowTutorial": {
+        "Name": "Mostra le istruzioni al primo avvio",
+        "Hint": "Alla prima apertura del Tavolo il GM vede un riepilogo delle regole."
+      },
+      "Volume": {
+        "Name": "Suoni del tavolo",
+        "Hint": "Volume dei rumori delle biglie (0 = muto)."
+      }
+    }
+  }
+}

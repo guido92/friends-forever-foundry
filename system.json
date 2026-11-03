@@ -1,0 +1,63 @@
+{
+  "id": "friends-forever",
+  "title": "Friends Forever",
+  "description": "<p>Sistema non ufficiale per giocare a <strong>Friends Forever</strong>, il GDR masterless sull'amicizia, da remoto: il tavolo con la Mappa di carta, le biglie che rotolano (fisica vera), le Sezioni e i Temi, le schede con la Tabella dell'Amicizia, il Dado della Morte e l'Epilogo. Include la modalità in solitario.</p>",
+  "version": "0.1.0",
+  "compatibility": {
+    "minimum": "13",
+    "verified": "14.369"
+  },
+  "authors": [
+    {
+      "name": "Michael Guidotti"
+    }
+  ],
+  "esmodules": [
+    "module/friends-forever.mjs"
+  ],
+  "styles": [
+    "styles/friends-forever.css"
+  ],
+  "languages": [
+    {
+      "lang": "it",
+      "name": "Italiano",
+      "path": "lang/it.json"
+    },
+    {
+      "lang": "en",
+      "name": "English",
+      "path": "lang/en.json"
+    }
+  ],
+  "documentTypes": {
+    "Actor": {
+      "personaggio": {
+        "htmlFields": [
+          "note"
+        ]
+      }
+    },
+    "Item": {
+      "legame": {
+        "htmlFields": [
+          "descrizione"
+        ]
+      },
+      "problematica": {
+        "htmlFields": [
+          "descrizione"
+        ]
+      }
+    }
+  },
+  "socket": true,
+  "grid": {
+    "distance": 1,
+    "units": ""
+  },
+  "background": "",
+  "url": "",
+  "manifest": "",
+  "download": ""
+}

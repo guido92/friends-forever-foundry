@@ -1,0 +1,29 @@
+name: Release
+
+# Crea una release (zip + manifesto) quando si pubblica un tag vX.Y.Z
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Test
+        run: npm test
+      - name: Build
+        run: node tools/build.mjs --version "${GITHUB_REF_NAME#v}" --repo "$GITHUB_REPOSITORY"
+      - name: Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            dist/system.json
+            dist/friends-forever-*.zip

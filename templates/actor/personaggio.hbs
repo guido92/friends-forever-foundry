@@ -1,0 +1,56 @@
+<section class="ff-sheet-body">
+  <header class="ff-head">
+    <span class="ff-marble" style="--marble: {{system.colore}}" title="Colore delle tue biglie"></span>
+    <div class="ff-head-fields">
+      <input class="ff-name" type="text" name="name" value="{{actor.name}}" placeholder="Mi chiamo…" {{#unless editable}}disabled{{/unless}}>
+      <div class="ff-head-row">
+        <label>Età attuale
+          <input type="text" name="system.eta" value="{{system.eta}}" placeholder="es. 8 anni" {{#unless editable}}disabled{{/unless}}>
+        </label>
+        <label>Colore biglie
+          <input type="color" name="system.colore" value="{{system.colore}}" {{#unless editable}}disabled{{/unless}}>
+        </label>
+        <label class="ff-check">
+          <input type="checkbox" name="system.vivo" {{checked system.vivo}} {{#unless editable}}disabled{{/unless}}> In vita
+        </label>
+      </div>
+    </div>
+    <div class="ff-score" title="Legami − Problematiche (gli Indistruttibili valgono doppio)">
+      <span class="ff-score-n">{{tally.score}}</span>
+      <span class="ff-score-l">{{tally.legami}} legami · {{tally.problemi}} problemi</span>
+    </div>
+  </header>
+
+  <h2 class="ff-h2">Tabella dell'Amicizia</h2>
+  <div class="ff-cols">
+    <div class="ff-col ff-col-legami">
+      <h3>Legami
+        {{#if editable}}<a class="ff-add" data-action="addVoce" data-tipo="legame" title="Aggiungi un Legame"><i class="fa-solid fa-plus"></i></a>{{/if}}
+      </h3>
+      <ul class="ff-voci">
+        {{#each legami}}
+          {{> "systems/friends-forever/templates/actor/voce-riga.hbs"}}
+        {{else}}
+          <li class="ff-empty">Nessun Legame, per ora.</li>
+        {{/each}}
+      </ul>
+    </div>
+    <div class="ff-col ff-col-problemi">
+      <h3>Problematiche
+        {{#if editable}}<a class="ff-add" data-action="addVoce" data-tipo="problematica" title="Aggiungi una Problematica"><i class="fa-solid fa-plus"></i></a>{{/if}}
+      </h3>
+      <ul class="ff-voci">
+        {{#each problemi}}
+          {{> "systems/friends-forever/templates/actor/voce-riga.hbs"}}
+        {{else}}
+          <li class="ff-empty">Nessuna Problematica, per ora.</li>
+        {{/each}}
+      </ul>
+    </div>
+  </div>
+
+  <h2 class="ff-h2">Foglio Personaggio</h2>
+  <div class="ff-notes">
+    <prose-mirror name="system.note" value="{{system.note}}" toggled="true" collaborate="false" {{#unless editable}}disabled{{/unless}}>{{{noteHTML}}}</prose-mirror>
+  </div>
+</section>

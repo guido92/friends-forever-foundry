@@ -1,0 +1,19 @@
+<section class="ff-voce-sheet">
+  <header class="ff-voce-head">
+    <span class="ff-voce-icon {{#if isLegame}}legame{{else}}problematica{{/if}}"><i class="fa-solid {{#if isLegame}}fa-link{{else}}fa-heart-crack{{/if}}"></i></span>
+    <input type="text" name="name" value="{{item.name}}" {{#unless editable}}disabled{{/unless}}>
+  </header>
+  <label>Con
+    <span class="ff-hint">{{con}}</span>
+  </label>
+  <label>Fase
+    <input type="text" name="system.fase" value="{{system.fase}}" {{#unless editable}}disabled{{/unless}}>
+  </label>
+  <label class="ff-check">
+    <input type="checkbox" name="system.indistruttibile" {{checked system.indistruttibile}} {{#if lockedIndestructible}}disabled{{else}}{{#unless editable}}disabled{{/unless}}{{/if}}>
+    Indistruttibile (vale doppio, non si può rimuovere)
+  </label>
+  <div class="ff-notes">
+    <prose-mirror name="system.descrizione" value="{{system.descrizione}}" toggled="true" collaborate="false" {{#unless editable}}disabled{{/unless}}>{{{descrizioneHTML}}}</prose-mirror>
+  </div>
+</section>
