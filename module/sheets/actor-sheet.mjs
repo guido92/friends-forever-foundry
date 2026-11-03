@@ -1,5 +1,6 @@
 import { tally } from "../core/rules.mjs";
 import { annotaDialog, rimuoviDialog } from "../apps/annota.mjs";
+import { ARTE, urlArte } from "../data/arte.mjs";
 
 const { HandlebarsApplicationMixin } = foundry.applications.api;
 const { ActorSheetV2 } = foundry.applications.sheets;
@@ -34,6 +35,7 @@ export class FFActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
     const view = (i) => ({
       id: i.id,
       tipo: i.type,
+      nome: i.name,
       descrizione: i.system.descrizione,
       con: i.system.con.map((c) => c.nome).join(", "),
       fase: i.system.fase,
@@ -47,6 +49,7 @@ export class FFActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
     return Object.assign(ctx, {
       actor,
       system: actor.system,
+      banner: urlArte(ARTE.scheda),
       editable: this.isEditable,
       legami: attive("legame"),
       problemi: attive("problematica"),
@@ -56,6 +59,11 @@ export class FFActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
         secrets: actor.isOwner,
       }),
     });
+  }
+
+  _onRender(context, options) {
+    super._onRender?.(context, options);
+    this.element.classList.toggle("has-art", !!context.banner);
   }
 
   static async #onAddVoce(event, target) {

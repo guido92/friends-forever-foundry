@@ -4,6 +4,7 @@ import { FFGame, SYSTEM_ID } from "./game/ff-game.mjs";
 import { FFTavolo } from "./apps/tavolo.mjs";
 import { annotaDialog, rimuoviScelta } from "./apps/annota.mjs";
 import { preparaContenuti } from "./content/setup-content.mjs";
+import { rilevaArte } from "./data/arte.mjs";
 
 Hooks.once("init", () => {
   console.log("Friends Forever | inizializzazione del sistema");
@@ -48,6 +49,7 @@ Hooks.once("init", () => {
 
 Hooks.once("ready", async () => {
   FFGame.activateSocket();
+  await rilevaArte();
   let hadGame = !!FFGame.state;
   Hooks.on("ffStateChanged", (state) => {
     if (state && !hadGame) FFTavolo.open();
@@ -98,7 +100,11 @@ Hooks.on("preDeleteItem", (item, options, userId) => {
   if (item.system?.indistruttibile && !game.users.get(userId)?.isGM) return false;
 });
 Hooks.on("preUpdateItem", (item, changes, options, userId) => {
-  if (item.system?.indistruttibile && foundry.utils.getProperty(changes, "system.rimosso") === true && !game.users.get(userId)?.isGM) {
+  if (!item.system?.indistruttibile || game.users.get(userId)?.isGM) return;
+  const c = foundry.utils.expandObject(foundry.utils.deepClone(changes));
+  const rimuove = foundry.utils.getProperty(c, "system.rimosso") === true;
+  const declassa = foundry.utils.getProperty(c, "system.indistruttibile") === false;
+  if (rimuove || declassa) {
     ui.notifications.warn("Le voci Indistruttibili non possono essere rimosse in alcun modo.");
     return false;
   }

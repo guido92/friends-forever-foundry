@@ -288,6 +288,7 @@ const HANDLERS = {
     if (phase.death != null) {
       const roll = d6(s);
       const triggered = deathTriggers(phase, roll);
+      s.deathRoll = { seq: s.seq + 1, roll, needed: phase.death, triggered, phase: phase.label, by: s.players[nextFirst].name };
       effects.push({
         type: "deathDie",
         roll,
@@ -328,7 +329,7 @@ const HANDLERS = {
 
 function insideTableMargin(s, launch) {
   if (!launch || ![launch.x, launch.y, launch.vx, launch.vy].every(Number.isFinite)) return false;
-  const p = s.torn ? s.paper : s.paper; // il bordo di lancio è sempre fuori dal foglio intero
+  const p = boundsOf(s); // fuori dal foglio rimasto (nell'Epilogo, la metà strappata è tavolo)
   const inPaper = launch.x > p.x && launch.x < p.x + p.w && launch.y > p.y && launch.y < p.y + p.h;
   return !inPaper && launch.x > 0 && launch.x < s.table.w && launch.y > 0 && launch.y < s.table.h;
 }
@@ -361,7 +362,7 @@ function placeNpcMarbles(s, effects, count = s.npcs.length) {
 function buildWorld(s) {
   return createWorld({
     table: s.table,
-    paper: s.paper,
+    paper: boundsOf(s),
     smudges: s.residue.smudges,
     creases: s.residue.creases,
     obstacles: s.obstacles,

@@ -1,4 +1,5 @@
 <section class="ff-sheet-body">
+  {{#if banner}}<div class="ff-sheet-banner ff-torn-b" style="background-image: url('{{banner}}')"><span>La Tabella dell'Amicizia</span></div>{{/if}}
   <header class="ff-head">
     <span class="ff-marble" style="--marble: {{system.colore}}" title="Colore delle tue biglie"></span>
     <div class="ff-head-fields">
@@ -51,6 +52,6 @@
 
   <h2 class="ff-h2">Foglio Personaggio</h2>
   <div class="ff-notes">
-    <prose-mirror name="system.note" value="{{system.note}}" toggled="true" collaborate="false" {{#unless editable}}disabled{{/unless}}>{{{noteHTML}}}</prose-mirror>
+    <prose-mirror name="system.note" value="{{system.note}}" toggled="true" {{#unless editable}}disabled{{/unless}}>{{{noteHTML}}}</prose-mirror>
   </div>
 </section>

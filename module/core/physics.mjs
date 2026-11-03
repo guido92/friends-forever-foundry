@@ -81,6 +81,7 @@ export function clutterObstacles(paper, table, rng, count = 5) {
     const onPaper =
       x > paper.x - r - 6 && x < paper.x + paper.w + r + 6 && y > paper.y - r - 6 && y < paper.y + paper.h + r + 6;
     if (onPaper) continue;
+    if (x > 440 && x < 840 && y < 100) continue; // sotto il banner "Tocca a…"
     if (out.some((o) => Math.hypot(o.x - x, o.y - y) < o.r + r + 20)) continue;
     out.push({ x: Math.round(x), y: Math.round(y), r: Math.round(r), kind: items[out.length % items.length] });
   }

@@ -181,7 +181,9 @@ export function nearestInteriorPoint(poly, x, y, margin = 18) {
  * Spirale attorno al baricentro; ritorna [x,y][].
  */
 export function packInSection(poly, occupied, count, radius, rng = Math.random) {
-  const [cx, cy] = polygonCentroid(poly);
+  let [cx, cy] = polygonCentroid(poly);
+  // le biglie vanno sotto il Tema scritto al centro, non sopra: ancora spostata verso il basso
+  if (pointInPolygon(cx, cy + 52, poly) && distToPolygonEdge(cx, cy + 52, poly) > radius + 6) cy += 52;
   const placed = [];
   const taken = occupied.map((p) => [p[0], p[1]]);
   const gap = radius * 2 + 3;

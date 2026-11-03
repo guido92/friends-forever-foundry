@@ -1,5 +1,5 @@
 <li class="ff-voce {{#if rimosso}}is-removed{{/if}} {{#if indistruttibile}}is-indestructible{{/if}}" data-item-id="{{id}}">
-  <div class="ff-voce-text">{{{descrizione}}}</div>
+  <div class="ff-voce-text">{{#if descrizione}}{{{descrizione}}}{{else}}{{nome}}{{/if}}</div>
   <div class="ff-voce-meta">
     {{#if indistruttibile}}<span class="ff-tag ff-tag-ind" title="Indistruttibile: non può essere rimossa e vale doppio"><i class="fa-solid fa-infinity"></i> Indistruttibile</span>{{/if}}
     {{#if con}}<span class="ff-tag">con {{con}}</span>{{/if}}

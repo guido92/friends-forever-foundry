@@ -1,5 +1,10 @@
 <aside class="ff-panel">
   <div class="ff-panel-scroll">
+    {{#if hero.url}}
+      <section class="ff-hero ff-torn-b" style="background-image: url('{{hero.url}}')">
+        <div class="ff-hero-text"><div class="ff-hero-kicker">{{hero.kicker}}</div><div class="ff-hero-title">{{hero.title}}</div></div>
+      </section>
+    {{/if}}
     {{#unless hasGame}}
       <section class="ff-box ff-welcome">
         <h2>Friends Forever</h2>
@@ -11,7 +16,7 @@
         {{/if}}
       </section>
     {{else}}
-      <section class="ff-box ff-phase">
+      <section class="ff-box ff-phase {{#if hero.url}}has-hero{{/if}}">
         <div class="ff-phase-title">
           {{#if phaseNum}}<span class="ff-phase-n">Fase {{phaseNum}}/{{phaseTotal}}</span>{{/if}}
           <strong>{{phaseLabel}}</strong>

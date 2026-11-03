@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<title>Anteprima grafica del Tavolo</title>
+<style>
+  @font-face { font-family: "Patrick Hand SC"; src: url("../../assets/fonts/PatrickHandSC-Regular.ttf"); }
+  @font-face { font-family: "Permanent Marker"; src: url("../../assets/fonts/PermanentMarker-Regular.ttf"); }
+  @font-face { font-family: "Caveat"; src: url("../../assets/fonts/Caveat.ttf"); font-weight: 400 700; }
+  body { margin: 0; background: #111; color: #eee; font-family: sans-serif; }
+  canvas { width: 100vw; height: auto; display: block; }
+  #bar { position: fixed; top: 4px; right: 6px; font-size: 12px; opacity: .8; }
+</style>
+</head>
+<body>
+<canvas id="c" width="1280" height="900"></canvas>
+<div id="bar"><a style="color:#9cf" href="?state=state.json">in gioco</a> · <a style="color:#9cf" href="?state=none">nessuna partita</a> · <a style="color:#9cf" href="?state=epilogo.json">epilogo</a></div>
+<script type="module">
+import { TavoloCanvas } from "../../module/apps/tavolo-canvas.mjs";
+await Promise.all(["Patrick Hand SC", "Permanent Marker", "Caveat"].map((f) => document.fonts.load(`20px "${f}"`)));
+const art = {};
+await Promise.all(["grunge"].map((n) => new Promise((res) => { const i = new Image(); i.onload = () => { art[n] = i; res(); }; i.onerror = res; i.src = `../../assets/ff-art/${n}.jpg`; })));
+const q = new URLSearchParams(location.search).get("state") ?? "state.json";
+const state = q === "none" ? null : await (await fetch(q)).json();
+const tv = new TavoloCanvas(document.getElementById("c"), { onLaunch: (l) => console.log("lancio", l), canAim: () => ({ ok: true, color: "#d6453d" }), volume: () => 0, art: (n) => art[n] ?? null });
+tv.setState(state);
+window.tv = tv;
+</script>
+</body>
+</html>

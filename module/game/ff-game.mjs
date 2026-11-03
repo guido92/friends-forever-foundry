@@ -14,6 +14,8 @@ function allowed(action, state, user) {
   if (user.isGM) return true;
   const cur = state?.players?.[state.turnIdx];
   const mine = (p) => p?.userId === user.id;
+  const seated = !!state?.players?.some(mine);
+  const ownsActor = (id) => !!id && !!game.actors.get(id)?.testUserPermission(user, "OWNER");
   switch (action.type) {
     case "newGame":
     case "reset":
@@ -23,9 +25,9 @@ function allowed(action, state, user) {
     case "rerollSections":
     case "beginThrows":
     case "nextPhase":
-      return !!state;
+      return seated;
     case "registerBond":
-      return !!state;
+      return !!state && (ownsActor(action.a) || ownsActor(action.b));
     case "throw":
     case "advance":
     case "chooseGroove":

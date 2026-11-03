@@ -88,7 +88,7 @@ export async function setupDialog() {
   // allinea il colore delle biglie del foglio a quello assegnato
   for (const p of players) {
     const a = game.actors.get(p.actorId);
-    if (a && a.system.colore !== p.color) await a.update({ "system.colore": p.color });
+    if (a && String(a.system.colore).toLowerCase() !== p.color.toLowerCase()) await a.update({ "system.colore": p.color });
   }
   await FFGame.dispatch({
     type: "newGame",
