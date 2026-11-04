@@ -8,6 +8,17 @@ Sistema **non ufficiale** per giocare a *Friends Forever* (GDR masterless sull'a
 > (Elisa Lo Porto, Officina Meningi): sono incluse solo per rendere il sistema giocabile, **non sono coperte dalla licenza MIT**
 > e non vanno riutilizzate altrove. Se sei un titolare dei diritti e vuoi che vengano rimosse, scrivi a michael.guidotti@latavernadiguido.it.
 
+<p align="center"><img src="docs/img/tavolo.jpg" alt="Il Tavolo di Friends Forever su Foundry VTT" width="900"></p>
+
+## Anteprima
+
+| | |
+|---|---|
+| ![Temi](docs/img/temi.jpg) **I Temi**: una parola per Sezione | ![Lancio](docs/img/lancio.jpg) **Il lancio**: trascina e rilascia la biglia |
+| ![Racconto](docs/img/racconto.jpg) **Racconto e annotazioni** | ![Chat](docs/img/chat.jpg) **Card in chat** per ogni esito |
+| ![Dado](docs/img/dado.jpg) **Dado della Morte** | ![Epilogo](docs/img/epilogo.jpg) **Epilogo** con 8 finali |
+| ![Scheda](docs/img/scheda.jpg) **Scheda** con la Tabella dell'Amicizia | |
+
 ## Cosa c'è
 
 - **Il Tavolo** — la finestra di gioco: un foglio di carta (la Mappa) su un tavolo di legno, con le **biglie** che rotolano con
@@ -39,7 +50,7 @@ Serve **Foundry VTT v13 o v14** (verificato su 14.369).
 3. Premi **Install**. Il sistema compare come *Friends Forever*.
 4. Crea un nuovo **World** scegliendo il sistema *Friends Forever* e avvialo.
 
-**Metodo manuale:** scarica `friends-forever-v0.1.1.zip` dalla pagina [Releases](https://github.com/guido92/friends-forever-foundry/releases),
+**Metodo manuale:** scarica `friends-forever-v0.1.2.zip` dalla pagina [Releases](https://github.com/guido92/friends-forever-foundry/releases),
 estrailo in `Data/systems/friends-forever/` (la cartella deve contenere direttamente `system.json`) e riavvia Foundry.
 
 **Aggiornare:** dalla scheda *Game Systems* premi *Update* sul sistema.
