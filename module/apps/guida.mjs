@@ -11,7 +11,7 @@ export class FFGuida extends HandlebarsApplicationMixin(ApplicationV2) {
     classes: ["friends-forever", "ff-guida"],
     window: { title: "Friends Forever — Guida, comandi e crediti", icon: "fa-solid fa-book-skull", resizable: true },
     position: { width: 760, height: 720 },
-    actions: { tab: FFGuida.onTab },
+    actions: { guidaTab: FFGuida.onTab },
   };
 
   static PARTS = {
@@ -32,7 +32,7 @@ export class FFGuida extends HandlebarsApplicationMixin(ApplicationV2) {
   _onRender() {
     const tab = this.tab ?? "intro";
     this.element.querySelectorAll("[data-page]").forEach((p) => p.classList.toggle("is-active", p.dataset.page === tab));
-    this.element.querySelectorAll("[data-action='tab']").forEach((b) => b.classList.toggle("is-active", b.dataset.tab === tab));
+    this.element.querySelectorAll("[data-action='guidaTab']").forEach((b) => b.classList.toggle("is-active", b.dataset.tab === tab));
     this.element.classList.toggle("has-art", !!urlArte(ARTE.copertina));
   }
 

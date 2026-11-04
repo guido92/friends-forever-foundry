@@ -309,4 +309,9 @@
 .ff-credits { display: grid; grid-template-columns: 11em 1fr; gap: 4px 14px; margin: 8px 0 14px; }
 .ff-credits dt { font-family: var(--ff-hand); color: var(--ff-cyan); text-transform: uppercase; letter-spacing: 0.05em; }
 .ff-credits dd { margin: 0; }
+.ff-links { list-style: none; padding: 0; margin: 6px 0 14px; display: grid; grid-template-columns: 1fr 1fr; gap: 6px 14px; }
+.ff-links li { display: flex; align-items: center; gap: 8px; }
+.ff-links i { width: 1.2em; text-align: center; color: var(--ff-cyan); }
+.ff-links a { color: var(--ff-white); text-decoration: underline; text-decoration-color: rgba(41, 182, 246, 0.7); text-underline-offset: 3px; }
+.ff-links a:hover { color: var(--ff-cyan); }
 
