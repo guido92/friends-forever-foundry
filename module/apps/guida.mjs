@@ -3,7 +3,7 @@ import { ARTE, urlArte } from "../data/arte.mjs";
 const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
 
 /** Indirizzo a cui arrivano assistenza e segnalazioni di bug (cambialo qui). */
-export const EMAIL_ASSISTENZA = "info@latavernadiguido.it";
+export const EMAIL_ASSISTENZA = "michael.guidotti@latavernadiguido.it";
 
 /** Informazioni utili per capire un problema, senza dati personali. */
 function diagnostica() {
