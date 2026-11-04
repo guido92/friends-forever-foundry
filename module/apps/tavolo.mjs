@@ -92,6 +92,7 @@ function dieSplash(d) {
 /** La finestra del Tavolo: Mappa con biglie + pannello di gioco. */
 export class FFTavolo extends HandlebarsApplicationMixin(ApplicationV2) {
   static instance = null;
+  static autoSize = null;
 
   static DEFAULT_OPTIONS = {
     id: "friends-forever-tavolo",
@@ -127,8 +128,25 @@ export class FFTavolo extends HandlebarsApplicationMixin(ApplicationV2) {
     if (app.rendered) {
       app.render({ parts: ["panel"] });
       app.bringToFront?.();
-    } else app.render({ force: true });
+    } else app.render({ force: true, position: FFTavolo.#posizione() });
     return app;
+  }
+
+  /** Il Tavolo occupa il 90% dello schermo, centrato: intorno si intravede lo sfondo a tema. */
+  static #posizione() {
+    const w = Math.round(window.innerWidth * 0.9);
+    const h = Math.round(window.innerHeight * 0.9);
+    FFTavolo.autoSize = { w, h };
+    return { width: w, height: h, left: Math.round((window.innerWidth - w) / 2), top: Math.round((window.innerHeight - h) / 2) };
+  }
+
+  /** Se la finestra del browser cambia misura e il Tavolo non è stato ridimensionato a mano, lo riadatta. */
+  static onResize() {
+    const app = FFTavolo.instance;
+    if (!app?.rendered || !FFTavolo.autoSize) return;
+    const { w, h } = FFTavolo.autoSize;
+    if (Math.abs(app.position.width - w) > 4 || Math.abs(app.position.height - h) > 4) return;
+    app.setPosition(FFTavolo.#posizione());
   }
 
   /** Chiamato quando lo stato cambia (da qualunque client). */

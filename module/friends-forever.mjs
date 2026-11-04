@@ -51,6 +51,7 @@ Hooks.once("init", () => {
 
 Hooks.once("ready", async () => {
   FFGame.activateSocket();
+  window.addEventListener("resize", foundry.utils.debounce(() => FFTavolo.onResize(), 200));
   await rilevaArte();
   // il Tavolo si apre da solo all'ingresso nel mondo; la guida la prima volta
   if (game.settings.get(SYSTEM_ID, "apriTavolo")) FFTavolo.open();
