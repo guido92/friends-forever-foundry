@@ -334,4 +334,11 @@
   60% { transform: translateY(0) rotate(6deg) scale(0.94); }
   100% { transform: none; }
 }
+.ff-assist-buttons { display: flex; flex-wrap: wrap; gap: 8px; margin: 12px 0; }
+.ff-assist-buttons button { flex: 1 1 auto; background: transparent; color: var(--ff-white); border: 2px solid rgba(255, 255, 255, 0.7); border-radius: 2px; font-family: var(--ff-hand); font-size: 1.05rem; letter-spacing: 0.05em; text-transform: uppercase; height: auto; padding: 6px 10px; }
+.ff-assist-buttons button:first-child { background: var(--ff-cyan); color: #04202e; border-color: var(--ff-cyan); }
+.ff-assist-buttons button:hover { border-color: var(--ff-cyan); color: var(--ff-cyan); background: transparent; }
+.ff-assist-buttons button:first-child:hover { background: #5fd0ff; color: #04202e; }
+.ff-diag { background: rgba(255, 255, 255, 0.08); border: 1px solid rgba(255, 255, 255, 0.2); padding: 8px 10px; font-size: 0.85rem; white-space: pre-wrap; word-break: break-word; color: #d8d6d0; }
+.ff-guida-nav button { font-size: 0.9rem; }
 

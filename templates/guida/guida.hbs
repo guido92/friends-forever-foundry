@@ -4,6 +4,7 @@
     <button type="button" data-action="guidaTab" data-tab="comandi"><i class="fa-solid fa-computer-mouse"></i> Comandi</button>
     <button type="button" data-action="guidaTab" data-tab="regole"><i class="fa-solid fa-list-check"></i> Esiti dei lanci</button>
     <button type="button" data-action="guidaTab" data-tab="crediti"><i class="fa-solid fa-feather"></i> Crediti</button>
+    <button type="button" data-action="guidaTab" data-tab="assistenza"><i class="fa-solid fa-life-ring"></i> Assistenza</button>
   </nav>
 
   <div class="ff-guida-page" data-page="intro">
@@ -112,5 +113,30 @@
       <dt>Font</dt><dd>Permanent Marker (Apache 2.0), Patrick Hand SC e Caveat (SIL OFL)</dd>
     </dl>
     <p class="ff-hint">Il gioco, il suo nome, i testi e le illustrazioni appartengono ai rispettivi autori. Questo sistema è un adattamento non ufficiale per il tavolo virtuale.</p>
+  </div>
+
+  <div class="ff-guida-page" data-page="assistenza">
+    <h1>Assistenza e bug</h1>
+    <p class="ff-lead">Qualcosa non funziona, hai un'idea o ti serve una mano? Scrivici: rispondiamo via email.</p>
+    <h2>Come segnalare un problema</h2>
+    <ol>
+      <li>Premi <strong>Scrivi una segnalazione</strong>: si apre il tuo programma di posta con un messaggio già pronto per <strong>{{email}}</strong>.</li>
+      <li>Descrivi cosa è successo, cosa ti aspettavi e, se riesci, i passi per ripeterlo.</li>
+      <li>Non cancellare le <em>informazioni tecniche</em> in fondo: ci dicono versione, browser e punto della partita (nessun dato personale).</li>
+    </ol>
+    <div class="ff-assist-buttons">
+      <button type="button" data-action="segnala" data-tipo="bug"><i class="fa-solid fa-bug"></i> Segnala un bug</button>
+      <button type="button" data-action="segnala" data-tipo="assistenza"><i class="fa-solid fa-envelope"></i> Chiedi assistenza</button>
+      <button type="button" data-action="copiaDiagnostica"><i class="fa-solid fa-copy"></i> Copia le informazioni tecniche</button>
+    </div>
+    <p class="ff-hint">Se il programma di posta non si apre, scrivi a <strong>{{email}}</strong> e incolla le informazioni tecniche (bottone qui sopra).</p>
+    <h2>Informazioni tecniche</h2>
+    <pre class="ff-diag">{{diagnostica}}</pre>
+    <h2>Prima di scrivere</h2>
+    <ul>
+      <li>Ricarica la pagina (<kbd>F5</kbd>): risolve la maggior parte dei blocchi.</li>
+      <li>Il GM deve essere collegato: la partita vive sul suo client.</li>
+      <li>Se un lancio sembra «sparito», guarda se il pannello chiede di scegliere la Sezione sul solco o di premere <em>Ho raccontato</em>.</li>
+    </ul>
   </div>
 </section>
