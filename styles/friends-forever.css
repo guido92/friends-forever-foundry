@@ -148,7 +148,7 @@
 .ff-canvas { width: 100%; height: auto; max-height: 100%; aspect-ratio: 1280 / 900; object-fit: contain; touch-action: none; cursor: crosshair; display: block; }
 
 .ff-panel { background: var(--ff-black); color: var(--ff-white); border-left: 3px solid var(--ff-cyan); min-height: 0; display: flex; flex-direction: column; position: relative; }
-.friends-forever.has-art .ff-panel { background: var(--ff-black) url("../assets/ff-art/grunge.jpg") center / cover; background-blend-mode: normal; }
+.friends-forever.has-art .ff-panel { background: linear-gradient(rgba(6, 6, 8, 0.82), rgba(6, 6, 8, 0.82)), url("../assets/ff-art/grunge.jpg") center / cover; }
 .ff-panel-scroll { flex: 1; overflow-y: auto; padding: 0 0 10px; display: flex; flex-direction: column; gap: 10px; }
 .ff-panel-scroll > section { margin: 0 10px; }
 .ff-hero { display: none; margin: 0 !important; height: 168px; background: #000 center 25% / cover no-repeat; position: relative; flex: none; }
@@ -288,7 +288,7 @@
 
 /* ================================== Guida ================================== */
 .friends-forever.ff-guida .window-content { background: var(--ff-black); color: var(--ff-white); padding: 0; overflow: hidden; }
-.friends-forever.has-art.ff-guida .window-content { background: var(--ff-black) url("../assets/ff-art/grunge.jpg") center / cover; }
+.friends-forever.has-art.ff-guida .window-content { background: linear-gradient(rgba(6, 6, 8, 0.88), rgba(6, 6, 8, 0.88)), url("../assets/ff-art/grunge.jpg") center / cover; }
 .ff-guida-body { display: flex; flex-direction: column; height: 100%; }
 .ff-guida-nav { display: flex; gap: 6px; padding: 8px 10px; border-bottom: 3px solid var(--ff-cyan); background: rgba(0, 0, 0, 0.6); flex: none; }
 .ff-guida-nav button { flex: 1; background: transparent; color: var(--ff-white); border: 2px solid rgba(255, 255, 255, 0.6); border-radius: 2px; font-family: var(--ff-hand); font-size: 1rem; letter-spacing: 0.05em; text-transform: uppercase; height: auto; padding: 4px; }
