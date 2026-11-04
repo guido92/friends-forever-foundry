@@ -38,6 +38,7 @@ export async function setupDialog() {
     </fieldset>
     <fieldset><legend>Opzioni</legend>
       <label class="ff-check"><input type="checkbox" name="demo"> Sessione dimostrativa (3 Fasi, ~2 ore)</label>
+      <label class="ff-check"><input type="checkbox" name="azzera" checked> Azzera i fogli dei Personaggi (cancella Legami e Problematiche della partita precedente)</label>
       <label class="ff-check"><input type="checkbox" name="disordine" checked> Disordine sul tavolo (le biglie rimbalzano su bicchieri e ciotole)</label>
     </fieldset>
   </div>`;
@@ -89,6 +90,14 @@ export async function setupDialog() {
   for (const p of players) {
     const a = game.actors.get(p.actorId);
     if (a && String(a.system.colore).toLowerCase() !== p.color.toLowerCase()) await a.update({ "system.colore": p.color });
+  }
+  if (data.azzera) {
+    for (const p of players) {
+      const a = game.actors.get(p.actorId);
+      const ids = a?.items.filter((i) => i.type === "legame" || i.type === "problematica").map((i) => i.id) ?? [];
+      // le voci Indistruttibili le cancella solo il GM: in una nuova partita è lui a decidere
+      if (ids.length) await a.deleteEmbeddedDocuments("Item", ids);
+    }
   }
   await FFGame.dispatch({
     type: "newGame",
