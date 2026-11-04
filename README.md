@@ -4,8 +4,9 @@ Sistema **non ufficiale** per giocare a *Friends Forever* (GDR masterless sull'a
 [Foundry VTT](https://foundryvtt.com) (v13+, verificato su 14.369).
 
 > Il gioco, il nome, i testi e le illustrazioni appartengono ai rispettivi autori. Questo repository contiene solo il
-> codice del sistema (MIT): **le illustrazioni del libro non sono incluse** e non vanno ridistribuite.
-> Il sistema funziona anche senza (vedi sotto per mostrarle usando il tuo PDF).
+> codice del sistema (MIT). Le **illustrazioni** (cartella `assets/ff-art`) sono di **Jioke** e appartengono ai loro autori
+> (Elisa Lo Porto, Officina Meningi): sono incluse solo per rendere il sistema giocabile, **non sono coperte dalla licenza MIT**
+> e non vanno riutilizzate altrove. Se sei un titolare dei diritti e vuoi che vengano rimosse, scrivi a michael.guidotti@latavernadiguido.it.
 
 ## Cosa c'è
 
@@ -38,21 +39,19 @@ Serve **Foundry VTT v13 o v14** (verificato su 14.369).
 3. Premi **Install**. Il sistema compare come *Friends Forever*.
 4. Crea un nuovo **World** scegliendo il sistema *Friends Forever* e avvialo.
 
-**Metodo manuale:** scarica `friends-forever-v0.1.0.zip` dalla pagina [Releases](https://github.com/guido92/friends-forever-foundry/releases),
+**Metodo manuale:** scarica `friends-forever-v0.1.1.zip` dalla pagina [Releases](https://github.com/guido92/friends-forever-foundry/releases),
 estrailo in `Data/systems/friends-forever/` (la cartella deve contenere direttamente `system.json`) e riavvia Foundry.
 
 **Aggiornare:** dalla scheda *Game Systems* premi *Update* sul sistema.
 
-### Illustrazioni (facoltativo)
+### Illustrazioni
 
-Il sistema non contiene le illustrazioni del libro. Se possiedi il PDF del gioco puoi mostrarle in locale:
+Sono già incluse nel sistema, non devi fare nulla. Se vuoi rigenerarle dal tuo PDF del gioco (`tools/extract-art.py`):
 
 ```bash
 pip install pymupdf pillow
 python tools/extract-art.py "percorso/del/Friends Forever.pdf"
 ```
-
-Le immagini finiscono in `assets/ff-art/` (ignorata da git) e restano solo sul tuo computer.
 
 ### Problemi?
 

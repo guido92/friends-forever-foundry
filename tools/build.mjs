@@ -38,8 +38,7 @@ mkdirSync(stage, { recursive: true });
 
 for (const entry of ["module", "templates", "styles", "lang", "assets", "README.md", "LICENSE"]) {
   const from = join(root, entry);
-  // le illustrazioni del manuale (assets/ff-art) sono dei loro autori: restano solo in locale
-  const filter = (src) => !src.replaceAll("\\", "/").includes("/assets/ff-art");
+  const filter = () => true;
   if (existsSync(from)) cpSync(from, join(stage, entry), { recursive: true, filter });
 }
 writeFileSync(join(stage, "system.json"), `${JSON.stringify(manifest, null, 2)}\n`);

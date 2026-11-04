@@ -4,8 +4,8 @@ Estrae dal TUO PDF di Friends Forever le illustrazioni usate dall'interfaccia de
     pip install pymupdf pillow
     python tools/extract-art.py "C:/percorso/Friends Forever.pdf"
 
-Scrive le immagini (JPG ridimensionati) in assets/ff-art/. Quella cartella è ignorata da git ed
-esclusa dallo zip: le illustrazioni sono di Jioke / Elisa Lo Porto e non vanno ridistribuite.
+Scrive le immagini (JPG ridimensionati) in assets/ff-art/. Le illustrazioni sono di Jioke / Elisa Lo Porto /
+Officina Meningi: non sono coperte dalla licenza MIT del codice.
 Gli xref sono quelli del PDF "[SINGLE PAGE]" della prima edizione; con un'altra edizione cambiano:
 lancia con --list per vedere le immagini grandi di ogni pagina e adatta la mappa PAGINE.
 """
