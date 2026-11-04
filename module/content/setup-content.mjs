@@ -129,18 +129,26 @@ export async function preparaContenuti() {
 
 /** Scena con lo sfondo a tema (il tavolo di legno scuro) attiva di default al posto dello sfondo di Foundry. */
 export async function preparaScena() {
-  if (game.scenes.find((sc) => sc.getFlag(SYSTEM_ID, "tavolo"))) return;
-  const scena = await Scene.create({
+  const src = `systems/${SYSTEM_ID}/assets/sfondo.jpg`;
+  let scena = game.scenes.find((sc) => sc.getFlag(SYSTEM_ID, "tavolo"));
+  const nuova = !scena;
+  scena ??= await Scene.create({
     name: "Friends Forever — Il Tavolo",
     width: 1920,
     height: 1080,
     padding: 0,
-    background: { src: `systems/${SYSTEM_ID}/assets/sfondo.jpg` },
     grid: { type: 0, size: 100 },
     tokenVision: false,
     fog: { exploration: false },
     initial: { x: 960, y: 540, scale: 1 },
     flags: { [SYSTEM_ID]: { tavolo: true } },
   });
-  await scena.activate(); // la prima volta sostituisce lo sfondo di default di Foundry
+  // da Foundry 14 lo sfondo sta nel Livello della scena, non più in scene.background
+  const livello = scena.levels?.contents?.[0];
+  if (livello && livello.background?.src !== src) {
+    await scena.updateEmbeddedDocuments("Level", [{ _id: livello.id, "background.src": src, "background.color": "#0b0b0c" }]);
+  } else if (!livello && scena.background?.src !== src) {
+    await scena.update({ "background.src": src });
+  }
+  if (nuova || !game.scenes.active) await scena.activate();
 }
