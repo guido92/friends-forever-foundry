@@ -2,7 +2,7 @@
   "id": "friends-forever",
   "title": "Friends Forever",
   "description": "<p>Sistema non ufficiale per giocare a <strong>Friends Forever</strong>, il GDR masterless sull'amicizia, da remoto: il tavolo con la Mappa di carta, le biglie che rotolano (fisica vera), le Sezioni e i Temi, le schede con la Tabella dell'Amicizia, il Dado della Morte e l'Epilogo. Include la modalità in solitario.</p>",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "compatibility": {
     "minimum": "13",
     "verified": "14.369"
@@ -68,8 +68,8 @@
     },
     {
       "type": "setup",
-      "url": "https://raw.githubusercontent.com/guido92/friends-forever-foundry/main/docs/img/tavolo.jpg",
-      "caption": "Il Tavolo"
+      "url": "https://raw.githubusercontent.com/guido92/friends-forever-foundry/main/assets/ff-art/cover.jpg",
+      "caption": "Friends Forever"
     }
   ],
   "license": "https://github.com/guido92/friends-forever-foundry/blob/main/LICENSE",
