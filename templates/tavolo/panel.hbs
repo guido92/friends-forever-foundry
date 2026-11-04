@@ -5,6 +5,7 @@
         <div class="ff-hero-text"><div class="ff-hero-kicker">{{hero.kicker}}</div><div class="ff-hero-title">{{hero.title}}</div></div>
       </section>
     {{/if}}
+    <div class="ff-guida-link"><button type="button" data-action="guida"><i class="fa-solid fa-book-skull"></i> Guida, comandi e crediti</button></div>
     {{#unless hasGame}}
       <section class="ff-box ff-welcome">
         <h2>Friends Forever</h2>
@@ -55,6 +56,20 @@
             <button type="button" data-action="rerollSections"><i class="fa-solid fa-shuffle"></i> Ridisegna Sezioni</button>
             <button type="button" class="ff-big" data-action="beginThrows" {{#unless allThemes}}disabled title="Ogni Sezione ha bisogno di un Tema"{{/unless}}><i class="fa-solid fa-play"></i> Inizia i lanci</button>
           </div>
+        </section>
+      {{/if}}
+
+      {{#if azioni.length}}
+        <section class="ff-box ff-annota">
+          <h3>Annota sul foglio</h3>
+          {{#each azioni}}
+            <div class="ff-row">
+              <span class="ff-rowname">{{name}}</span>
+              {{#each buttons}}
+                <button type="button" data-action="{{action}}" data-actor="{{../actorId}}" data-tipo="{{tipo}}" data-con="{{con}}" data-ind="{{ind}}" data-pref="{{pref}}"><i class="fa-solid {{icon}}"></i> {{label}}</button>
+              {{/each}}
+            </div>
+          {{/each}}
         </section>
       {{/if}}
 

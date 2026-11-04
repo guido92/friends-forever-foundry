@@ -146,8 +146,23 @@ export function pickEnding(sections, marbles, endingBySection) {
 }
 
 /** Sezione che contiene il punto (o null). Con `bounds`, fuori dal foglio = null. */
-export function sectionAt(sections, x, y, bounds = null) {
-  if (bounds && !(x >= bounds.x && x <= bounds.x + bounds.w && y >= bounds.y && y <= bounds.y + bounds.h)) return null;
+export function sectionAt(sections, x, y, bounds = null, tol = 0) {
+  if (bounds && !(x >= bounds.x && x <= bounds.x + bounds.w && y >= bounds.y && y <= bounds.y + bounds.h)) {
+    // tolleranza sul bordo: una biglia ferma a pochi pixel fuori conta nella Sezione più vicina
+    const near =
+      tol > 0 && x >= bounds.x - tol && x <= bounds.x + bounds.w + tol && y >= bounds.y - tol && y <= bounds.y + bounds.h + tol;
+    if (!near) return null;
+    let best = null;
+    let bestD = Infinity;
+    for (const s of sections) {
+      const d = distToPolygonEdge(x, y, s.poly);
+      if (d < bestD) {
+        bestD = d;
+        best = s.id;
+      }
+    }
+    return best;
+  }
   for (const s of sections) if (pointInPolygon(x, y, s.poly)) return s.id;
   return null;
 }
@@ -180,7 +195,7 @@ export function resolveThrow(ctx) {
   const endPos = new Map(start.map((m) => [m.id, sim.final[m.id] ?? { x: m.x, y: m.y }]));
   const endSec = new Map(start.map((m) => [m.id, sectionAt(sections, endPos.get(m.id).x, endPos.get(m.id).y, bounds)]));
   const tPos = sim.final[thrower.id];
-  const tEndSec = sectionAt(sections, tPos.x, tPos.y, bounds);
+  const tEndSec = sectionAt(sections, tPos.x, tPos.y, bounds, 12);
   const contactedId = sim.contact?.with ?? null;
   const owners = new Map(start.map((m) => [m.id, m.ownerId]));
 
@@ -194,7 +209,9 @@ export function resolveThrow(ctx) {
     if (near.length >= 2) {
       return { case: "solco", pending: true, options: near, rethrow: false, involved: [], sectionId: null, placements: [] };
     }
-    return inSectionNoPush(tEndSec, false);
+    // ferma entro la tolleranza ma di poco fuori dal foglio: la biglia viene rimessa dentro la Sezione
+    const sullaCarta = tPos.x >= bounds.x && tPos.x <= bounds.x + bounds.w && tPos.y >= bounds.y && tPos.y <= bounds.y + bounds.h;
+    return inSectionNoPush(tEndSec, !sullaCarta);
   }
 
   // 2. contatto: conta solo la Sezione della prima biglia toccata

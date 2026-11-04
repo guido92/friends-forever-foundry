@@ -147,35 +147,55 @@ function btn(actor, label, attrs, icon) {
   return `<button type="button" data-ff="${attrs.ff}" data-actor="${actor}" ${a}><i class="fa-solid ${icon}"></i> ${esc(label)}</button>`;
 }
 
-function outcomeButtons(e, state) {
-  const parts = [];
+/**
+ * Azioni da compiere sul foglio dopo un esito: una riga per personaggio coinvolto.
+ * Usate sia dalla card in chat sia dal pannello del Tavolo.
+ */
+export function outcomeActions(e, state) {
+  const rows = [];
   const humans = e.involved.filter((o) => !o.startsWith("npc:"));
   for (const actorId of humans) {
     const name = ownerNameFrom(state, actorId);
     const con = JSON.stringify(conList(e, state, actorId));
     const pref = e.involved.filter((o) => o !== actorId && !o.startsWith("npc:")).join(",");
-    const row = [];
+    const mk = (ff, tipo, label, icon, extra = {}) => ({ ff, tipo, label, icon, con, ind: "0", pref, ...extra });
+    let buttons = [];
     switch (e.case) {
       case "incontro":
-        row.push(btn(actorId, "Nuovo Legame", { ff: "annota", tipo: "legame", con, ind: "0" }, "fa-link"));
-        row.push(btn(actorId, "Risolvi una Problematica", { ff: "rimuovi", tipo: "problematica", pref }, "fa-eraser"));
+        buttons = [mk("annota", "legame", "Nuovo Legame", "fa-link"), mk("rimuovi", "problematica", "Risolvi una Problematica", "fa-eraser")];
         break;
       case "propri":
       case "scontro":
-        row.push(btn(actorId, "Elimina un Legame", { ff: "rimuovi", tipo: "legame", pref }, "fa-eraser"));
-        row.push(btn(actorId, "Nuova Problematica", { ff: "annota", tipo: "problematica", con, ind: "0" }, "fa-heart-crack"));
+        buttons = [mk("rimuovi", "legame", "Elimina un Legame", "fa-eraser"), mk("annota", "problematica", "Nuova Problematica", "fa-heart-crack")];
         break;
       case "problematica-indistruttibile":
-        row.push(btn(actorId, "Annota la Problematica Indistruttibile", { ff: "annota", tipo: "problematica", con: "[]", ind: "1" }, "fa-infinity"));
+        buttons = [mk("annota", "problematica", "Annota la Problematica Indistruttibile", "fa-infinity", { con: "[]", ind: "1" })];
         break;
       case "legame-indistruttibile":
-        row.push(btn(actorId, "Annota il Legame Indistruttibile", { ff: "annota", tipo: "legame", con, ind: "1" }, "fa-infinity"));
+        buttons = [mk("annota", "legame", "Annota il Legame Indistruttibile", "fa-infinity", { ind: "1" })];
         break;
       default:
         break;
     }
-    if (row.length) parts.push(`<div class="ff-row"><span class="ff-rowname">${esc(name)}</span>${row.join("")}</div>`);
+    if (buttons.length) rows.push({ actorId, name, buttons });
   }
+  return rows;
+}
+
+/** A fine Fase senza incontri ognuno elimina un Legame. */
+export function penaltyActions(state) {
+  return state.players.map((p) => ({
+    actorId: p.actorId,
+    name: p.name,
+    buttons: [{ ff: "rimuovi", tipo: "legame", label: "Elimina un Legame", icon: "fa-eraser", con: "[]", ind: "0", pref: "" }],
+  }));
+}
+
+function outcomeButtons(e, state) {
+  const parts = outcomeActions(e, state).map((r) => {
+    const row = r.buttons.map((x) => btn(r.actorId, x.label, { ff: x.ff, tipo: x.tipo, con: x.con, ind: x.ind, pref: x.pref }, x.icon)).join("");
+    return `<div class="ff-row"><span class="ff-rowname">${esc(r.name)}</span>${row}</div>`;
+  });
   return parts.length ? `<div class="ff-buttons">${parts.join("")}</div>` : "";
 }
 

@@ -199,6 +199,10 @@
 .ff-phase.has-hero .ff-phase-title { display: none; }
 .ff-panel .ff-big { background: var(--ff-cyan); color: #04202e; border-color: var(--ff-cyan); font-family: var(--ff-marker); font-size: 1rem; padding: 7px; transform: rotate(-0.5deg); box-shadow: 3px 3px 0 rgba(0, 0, 0, 0.7); }
 .ff-panel .ff-big:hover:not(:disabled) { background: #5fd0ff; color: #04202e; border-color: #5fd0ff; transform: rotate(0.4deg); }
+.ff-annota .ff-row { display: flex; flex-direction: column; gap: 4px; margin-bottom: 8px; }
+.ff-annota .ff-rowname { font-family: var(--ff-marker); font-size: 0.85rem; color: var(--ff-cyan); }
+.ff-guida-link { margin: 0 10px; }
+.ff-guida-link button { width: 100%; }
 .ff-gm { opacity: 0.85; }
 .ff-groove { border-left-color: var(--ff-red); }
 .ff-ending { border-left-color: var(--ff-red); }
@@ -281,3 +285,28 @@
 .ff-setup-row .ff-check { flex: none; width: 10em; }
 .ff-setup-row select { flex: 1; }
 .ff-solo-names { display: flex; gap: 6px; margin-top: 4px; }
+
+/* ================================== Guida ================================== */
+.friends-forever.ff-guida .window-content { background: var(--ff-black); color: var(--ff-white); padding: 0; overflow: hidden; }
+.friends-forever.has-art.ff-guida .window-content { background: var(--ff-black) url("../assets/ff-art/grunge.jpg") center / cover; }
+.ff-guida-body { display: flex; flex-direction: column; height: 100%; }
+.ff-guida-nav { display: flex; gap: 6px; padding: 8px 10px; border-bottom: 3px solid var(--ff-cyan); background: rgba(0, 0, 0, 0.6); flex: none; }
+.ff-guida-nav button { flex: 1; background: transparent; color: var(--ff-white); border: 2px solid rgba(255, 255, 255, 0.6); border-radius: 2px; font-family: var(--ff-hand); font-size: 1rem; letter-spacing: 0.05em; text-transform: uppercase; height: auto; padding: 4px; }
+.ff-guida-nav button:hover, .ff-guida-nav button.is-active { background: var(--ff-cyan); color: #04202e; border-color: var(--ff-cyan); }
+.ff-guida-page { display: none; flex: 1; overflow-y: auto; padding: 14px 22px 24px; font-size: 1.02rem; line-height: 1.45; }
+.ff-guida-page.is-active { display: block; }
+.ff-guida-page h1 { font-family: var(--ff-marker); font-size: 2.4rem; margin: 4px 0 10px; border: none; color: var(--ff-white); text-shadow: 3px 3px 0 rgba(41, 182, 246, 0.55); }
+.ff-guida-page h2 { font-family: var(--ff-marker); font-size: 1.1rem; margin: 18px 0 6px; border: none; color: var(--ff-cyan); text-transform: uppercase; letter-spacing: 0.06em; }
+.ff-guida-page .ff-lead { font-size: 1.15rem; }
+.ff-guida-page li { margin-bottom: 4px; }
+.ff-guida-page kbd { background: #fff; color: #111; border-radius: 3px; padding: 0 6px; font-family: var(--ff-hand); border: none; box-shadow: 0 2px 0 #888; }
+.ff-guida-page .ff-hint { color: #b9b6ad; }
+.ff-guida-cover { height: 190px; margin: -14px -22px 8px; background: #000 center 30% / cover no-repeat; }
+.ff-guida-table { width: 100%; border-collapse: collapse; }
+.ff-guida-table td { padding: 6px 8px; border-bottom: 1px solid rgba(255, 255, 255, 0.2); vertical-align: top; }
+.ff-guida-table td:first-child { width: 34%; font-family: var(--ff-hand); letter-spacing: 0.03em; color: var(--ff-cyan); }
+.ff-credit-big { font-family: var(--ff-marker); font-size: 1.8rem; margin: 0 0 8px; }
+.ff-credits { display: grid; grid-template-columns: 11em 1fr; gap: 4px 14px; margin: 8px 0 14px; }
+.ff-credits dt { font-family: var(--ff-hand); color: var(--ff-cyan); text-transform: uppercase; letter-spacing: 0.05em; }
+.ff-credits dd { margin: 0; }
+

@@ -16,8 +16,8 @@ export const PHYS = {
   outsideFactor: 1.6, // attrito fuori dal foglio
   smudgeExtra: 520, // decelerazione extra dentro una macchia
   smudgeWobble: 0.03, // rad per passo, scalato dal peso
-  creaseSlow: 0.84,
-  creaseTurn: 0.34, // rad (±metà)
+  creaseSlow: 0.74,
+  creaseTurn: 1.0, // rad (±metà): una piega devia davvero la biglia
   stopSpeed: 9,
   maxTime: 14,
   maxLaunch: 1900,
@@ -69,6 +69,19 @@ export function erasureResidue(phaseIndex, paper, rng) {
   return { smudges, creases };
 }
 
+/**
+ * Matita, gomma e dado sul bordo del tavolo: oggetti SOLIDI (cerchi) su cui le biglie rimbalzano.
+ * Le posizioni coincidono con il disegno del Tavolo.
+ */
+export function tableProps() {
+  const props = [];
+  const a = -0.06;
+  for (let t = -134; t <= 112; t += 10) props.push({ x: 318 + Math.cos(a) * t, y: 866 + Math.sin(a) * t, r: 8, kind: "matita" });
+  for (const d of [-17, 0, 17]) props.push({ x: 460 + d * Math.cos(0.12), y: 862 + d * Math.sin(0.12), r: 15, kind: "gomma" });
+  props.push({ x: 1128, y: 866, r: 21, kind: "dado" });
+  return props;
+}
+
 /** Disordine sul tavolo: bicchieri, ciotole, accendini... (cerchi fissi) nel margine fuori dal foglio. */
 export function clutterObstacles(paper, table, rng, count = 5) {
   const out = [];
@@ -81,6 +94,7 @@ export function clutterObstacles(paper, table, rng, count = 5) {
     const onPaper =
       x > paper.x - r - 6 && x < paper.x + paper.w + r + 6 && y > paper.y - r - 6 && y < paper.y + paper.h + r + 6;
     if (onPaper) continue;
+    if (y > 790) continue; // fascia di matita, gomma e dado
     if (x > 440 && x < 840 && y < 100) continue; // sotto il banner "Tocca a…"
     if (out.some((o) => Math.hypot(o.x - x, o.y - y) < o.r + r + 20)) continue;
     out.push({ x: Math.round(x), y: Math.round(y), r: Math.round(r), kind: items[out.length % items.length] });
@@ -287,7 +301,7 @@ export function simulateThrow(world, throwerId, launch, { seed = 1, params = {} 
 }
 
 /** Velocità di lancio da un trascinamento "fionda" (da `from` verso `to`: parte il lato opposto). */
-export function launchFromDrag(from, to, gain = 7.5, max = PHYS.maxLaunch) {
+export function launchFromDrag(from, to, gain = 4.6, max = PHYS.maxLaunch) {
   let vx = (from.x - to.x) * gain;
   let vy = (from.y - to.y) * gain;
   const sp = Math.hypot(vx, vy);

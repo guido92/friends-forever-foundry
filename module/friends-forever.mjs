@@ -2,8 +2,9 @@ import { PersonaggioData, VoceData } from "./documents/data-models.mjs";
 import { FFActorSheet, FFVoceSheet } from "./sheets/actor-sheet.mjs";
 import { FFGame, SYSTEM_ID } from "./game/ff-game.mjs";
 import { FFTavolo } from "./apps/tavolo.mjs";
+import { FFGuida } from "./apps/guida.mjs";
 import { annotaDialog, rimuoviScelta } from "./apps/annota.mjs";
-import { preparaContenuti } from "./content/setup-content.mjs";
+import { preparaContenuti, preparaScena } from "./content/setup-content.mjs";
 import { rilevaArte } from "./data/arte.mjs";
 
 Hooks.once("init", () => {
@@ -35,6 +36,7 @@ Hooks.once("init", () => {
       return FFGame.state;
     },
     openTable: () => FFTavolo.open(),
+    openGuida: (tab) => FFGuida.open(tab),
   };
 
   game.keybindings.register(SYSTEM_ID, "openTable", {
@@ -50,13 +52,22 @@ Hooks.once("init", () => {
 Hooks.once("ready", async () => {
   FFGame.activateSocket();
   await rilevaArte();
+  // il Tavolo si apre da solo all'ingresso nel mondo; la guida la prima volta
+  if (game.settings.get(SYSTEM_ID, "apriTavolo")) FFTavolo.open();
+  if (!game.settings.get(SYSTEM_ID, "guidaVista")) {
+    FFGuida.open("intro");
+    game.settings.set(SYSTEM_ID, "guidaVista", true);
+  }
   let hadGame = !!FFGame.state;
   Hooks.on("ffStateChanged", (state) => {
     if (state && !hadGame) FFTavolo.open();
     hadGame = !!state;
     FFTavolo.onState();
   });
-  if (game.user.isGM) await preparaContenuti();
+  if (game.user.isGM) {
+    await preparaContenuti();
+    await preparaScena();
+  }
 });
 
 // --- bottoni nelle card in chat -------------------------------------------------

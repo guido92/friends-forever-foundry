@@ -42,7 +42,7 @@ export class FFActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
       indistruttibile: i.system.indistruttibile,
       rimosso: i.system.rimosso,
       rimossoRacconto: i.system.rimossoRacconto,
-      canDelete: game.user.isGM || (!i.system.indistruttibile && this.isEditable),
+      canDelete: game.user.isGM,
     });
     const attive = (t) => voci.filter((i) => i.type === t).map(view);
     const t = tally(voci.map((i) => ({ tipo: i.type, ...i.system.toObject() })));
@@ -73,7 +73,9 @@ export class FFActorSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
 
   static #onEditVoce(event, target) {
     const item = this.document.items.get(target.closest("[data-item-id]").dataset.itemId);
-    item?.sheet.render(true);
+    if (!item) return;
+    item.sheet.render({ force: true });
+    setTimeout(() => item.sheet.bringToFront?.(), 50);
   }
 
   static async #onRemoveVoce(event, target) {

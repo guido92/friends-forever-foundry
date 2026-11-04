@@ -20,6 +20,7 @@ import {
   simulateThrow,
   erasureResidue,
   clutterObstacles,
+  tableProps,
 } from "../core/physics.mjs";
 import {
   PHASES,
@@ -365,7 +366,7 @@ function buildWorld(s) {
     paper: boundsOf(s),
     smudges: s.residue.smudges,
     creases: s.residue.creases,
-    obstacles: s.obstacles,
+    obstacles: [...s.obstacles, ...tableProps()],
     torn: s.torn ? { ...s.paper } : null,
     marbles: s.marbles.map((m) => ({ id: m.id, x: m.x, y: m.y })),
   });

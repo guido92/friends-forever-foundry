@@ -2,6 +2,9 @@ import { FFGame } from "../game/ff-game.mjs";
 import { currentPlayer, marblesLeft } from "../game/engine.mjs";
 import { TavoloCanvas } from "./tavolo-canvas.mjs";
 import { setupDialog } from "./setup.mjs";
+import { annotaDialog, rimuoviScelta } from "./annota.mjs";
+import { FFGuida } from "./guida.mjs";
+import { outcomeActions, penaltyActions } from "../game/chat.mjs";
 import { ARTE, arteDiFase, arteDisponibile, caricaImmagine, urlArte } from "../data/arte.mjs";
 import { spuntiPerFase } from "../data/spunti.mjs";
 import { ENDING_TYPES } from "../core/rules.mjs";
@@ -106,6 +109,9 @@ export class FFTavolo extends HandlebarsApplicationMixin(ApplicationV2) {
       chooseGroove: FFTavolo.onChooseGroove,
       chooseEnding: FFTavolo.onChooseEnding,
       openSheet: FFTavolo.onOpenSheet,
+      guida: FFTavolo.onGuida,
+      annotaVoce: FFTavolo.onAnnota,
+      rimuoviVoce: FFTavolo.onRimuovi,
     },
   };
 
@@ -265,7 +271,21 @@ export class FFTavolo extends HandlebarsApplicationMixin(ApplicationV2) {
       ending: st.epilogue?.result?.ending ?? null,
       endingLabel: KIND_LABEL[st.epilogue?.result?.ending] ?? (st.epilogue?.result?.ending === "tragico" ? "Finale tragico" : ""),
       help: FFTavolo.#help(st, { isMyTurn, cur }),
+      azioni: FFTavolo.#azioni(st, me),
     });
+  }
+
+  /** Bottoni "Annota sul foglio" per i personaggi dell'utente (il GM vede tutti). */
+  static #azioni(st, me) {
+    let rows = [];
+    if (["lanci", "epilogo-lanci"].includes(st.status) && st.awaiting && st.last?.outcome?.involved) rows = outcomeActions(st.last.outcome, st);
+    else if (st.status === "fine-fase" && st.encounters === 0) rows = penaltyActions(st);
+    return rows
+      .filter((r) => me.isGM || game.actors.get(r.actorId)?.isOwner)
+      .map((r) => ({
+        ...r,
+        buttons: r.buttons.map((b) => ({ ...b, action: b.ff === "annota" ? "annotaVoce" : "rimuoviVoce" })),
+      }));
   }
 
   static #help(st, { isMyTurn, cur }) {
@@ -404,6 +424,23 @@ export class FFTavolo extends HandlebarsApplicationMixin(ApplicationV2) {
 
   static onChooseEnding(event, target) {
     FFGame.dispatch({ type: "chooseEnding", kind: target.dataset.kind });
+  }
+
+  static onGuida() {
+    FFGuida.open();
+  }
+
+  static async onAnnota(event, target) {
+    const actor = game.actors.get(target.dataset.actor);
+    if (!actor) return;
+    const con = JSON.parse(target.dataset.con || "[]").map((c) => ({ id: c.id, nome: c.name ?? c.nome }));
+    await annotaDialog({ actor, tipo: target.dataset.tipo, con, indistruttibile: target.dataset.ind === "1" });
+  }
+
+  static async onRimuovi(event, target) {
+    const actor = game.actors.get(target.dataset.actor);
+    if (!actor) return;
+    await rimuoviScelta({ actor, tipo: target.dataset.tipo, preferiti: (target.dataset.pref || "").split(",").filter(Boolean) });
   }
 
   static onOpenSheet(event, target) {

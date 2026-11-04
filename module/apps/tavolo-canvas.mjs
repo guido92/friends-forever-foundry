@@ -6,7 +6,7 @@
  * Gestisce anche il lancio "a fionda" e l'animazione dei tiri.
  */
 import { polygonCentroid } from "../core/geometry.mjs";
-import { PHYS, TABLE, PAPER, launchFromDrag } from "../core/physics.mjs";
+import { PHYS, TABLE, PAPER, launchFromDrag, createWorld, simulateThrow, tableProps } from "../core/physics.mjs";
 
 const HAND = "'Patrick Hand SC','Caveat','Segoe Script','Comic Sans MS',cursive";
 const MARKER = "'Permanent Marker','Segoe Script',cursive";
@@ -169,6 +169,13 @@ export class TavoloCanvas {
     this._down = (e) => this.#pointerDown(e);
     this._move = (e) => this.#pointerMove(e);
     this._up = (e) => this.#pointerUp(e);
+    this._ctx = (e) => {
+      if (this.aim) {
+        e.preventDefault();
+        this.aim = null;
+        this.requestDraw();
+      }
+    };
     this._key = (e) => {
       if (e.key === "Escape" && this.aim) {
         this.aim = null;
@@ -177,6 +184,7 @@ export class TavoloCanvas {
     };
     this.canvas.addEventListener("pointerdown", this._down);
     this.canvas.addEventListener("pointermove", this._move);
+    this.canvas.addEventListener("contextmenu", this._ctx);
     window.addEventListener("pointerup", this._up);
     window.addEventListener("keydown", this._key);
   }
@@ -184,6 +192,7 @@ export class TavoloCanvas {
   #unbind() {
     this.canvas.removeEventListener("pointerdown", this._down);
     this.canvas.removeEventListener("pointermove", this._move);
+    this.canvas.removeEventListener("contextmenu", this._ctx);
     window.removeEventListener("pointerup", this._up);
     window.removeEventListener("keydown", this._key);
   }
@@ -391,7 +400,7 @@ export class TavoloCanvas {
     ctx.restore();
     // gomma
     ctx.save();
-    ctx.translate(520, 862);
+    ctx.translate(460, 862);
     ctx.rotate(0.12);
     ctx.shadowColor = "rgba(0,0,0,.5)";
     ctx.shadowBlur = 7;
@@ -963,6 +972,7 @@ export class TavoloCanvas {
     ctx.stroke();
     const dir = sp > 1 ? [l.vx / sp, l.vy / sp] : [0, 0];
     const len = 80 + 260 * pct;
+    const pv = this.#preview(l);
     ctx.shadowColor = CYAN;
     ctx.shadowBlur = 12;
     ctx.strokeStyle = `rgba(255,255,255,${0.4 + 0.5 * pct})`;
@@ -970,10 +980,18 @@ export class TavoloCanvas {
     ctx.setLineDash([10, 10]);
     ctx.beginPath();
     ctx.moveTo(from.x, from.y);
-    ctx.lineTo(from.x + dir[0] * len, from.y + dir[1] * len);
+    if (pv) for (let i = 0; i < pv.pts.length; i += 2) ctx.lineTo(pv.pts[i], pv.pts[i + 1]);
+    else ctx.lineTo(from.x + dir[0] * len, from.y + dir[1] * len);
     ctx.stroke();
     ctx.setLineDash([]);
     ctx.restore();
+    if (pv?.end) {
+      // dove dovrebbe fermarsi la biglia
+      ctx.save();
+      ctx.globalAlpha = 0.5;
+      this.#drawMarble(ctx, pv.end.x, pv.end.y, PHYS.radius, color ?? "#ffffff", "ghost");
+      ctx.restore();
+    }
     this.#drawMarble(ctx, from.x, from.y, PHYS.radius, color ?? "#ffffff", "aim");
     ctx.save();
     ctx.fillStyle = "rgba(0,0,0,.6)";
@@ -983,7 +1001,36 @@ export class TavoloCanvas {
     pg.addColorStop(1, "#ff5d8f");
     ctx.fillStyle = pg;
     ctx.fillRect(from.x - 36, from.y + 28, 72 * pct, 8);
+    ctx.font = `18px ${HAND}`;
+    ctx.textAlign = "center";
+    ctx.fillStyle = "#fff";
+    ctx.fillText(`FORZA ${Math.round(pct * 100)}%`, from.x, from.y + 56);
     ctx.restore();
+  }
+
+  /** Percorso previsto (stesse regole della fisica, senza gli urti con biglie in movimento). */
+  #preview(l) {
+    const st = this.state;
+    if (!st) return null;
+    const key = `${Math.round(l.vx / 6)}:${Math.round(l.vy / 6)}:${Math.round(l.x)}:${Math.round(l.y)}:${st.seq}`;
+    if (this._pk === key) return this._pv;
+    this._pk = key;
+    try {
+      const world = createWorld({
+        table: st.table,
+        paper: st.torn ? st.half : st.paper,
+        smudges: st.residue.smudges,
+        creases: st.residue.creases,
+        obstacles: [...st.obstacles, ...tableProps()],
+        marbles: st.marbles.map((m) => ({ id: m.id, x: m.x, y: m.y })),
+      });
+      const sim = simulateThrow(world, "aim", l, { seed: 7 });
+      const tr = sim.tracks.find((t) => t.id === "aim");
+      this._pv = tr ? { pts: tr.pts, end: sim.final.aim } : null;
+    } catch (e) {
+      this._pv = null;
+    }
+    return this._pv;
   }
 
   #drawBanner(ctx, st) {

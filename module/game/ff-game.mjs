@@ -55,6 +55,18 @@ export class FFGame {
       type: new foundry.data.fields.ObjectField({ nullable: true, initial: null }),
       onChange: () => Hooks.callAll("ffStateChanged", FFGame.state),
     });
+    game.settings.register(SYSTEM_ID, "apriTavolo", {
+      name: "Apri il Tavolo all'ingresso",
+      hint: "Apre da solo la finestra del Tavolo quando entri nel mondo.",
+      scope: "client",
+      config: true,
+      type: new foundry.data.fields.BooleanField({ initial: true }),
+    });
+    game.settings.register(SYSTEM_ID, "guidaVista", {
+      scope: "client",
+      config: false,
+      type: new foundry.data.fields.BooleanField({ initial: false }),
+    });
     game.settings.register(SYSTEM_ID, "contenuti", {
       scope: "world",
       config: false,

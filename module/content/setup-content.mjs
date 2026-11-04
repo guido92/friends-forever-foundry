@@ -126,3 +126,21 @@ export async function preparaContenuti() {
   await game.settings.set(SYSTEM_ID, "contenuti", CONTENT_VERSION);
   ui.notifications.info("Friends Forever: creati riepilogo, tabelle e macro nel mondo.");
 }
+
+/** Scena con lo sfondo a tema (il tavolo di legno scuro) attiva di default al posto dello sfondo di Foundry. */
+export async function preparaScena() {
+  if (game.scenes.find((sc) => sc.getFlag(SYSTEM_ID, "tavolo"))) return;
+  const scena = await Scene.create({
+    name: "Friends Forever — Il Tavolo",
+    width: 1920,
+    height: 1080,
+    padding: 0,
+    background: { src: `systems/${SYSTEM_ID}/assets/sfondo.jpg` },
+    grid: { type: 0, size: 100 },
+    tokenVision: false,
+    fog: { exploration: false },
+    initial: { x: 960, y: 540, scale: 1 },
+    flags: { [SYSTEM_ID]: { tavolo: true } },
+  });
+  await scena.activate(); // la prima volta sostituisce lo sfondo di default di Foundry
+}

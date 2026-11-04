@@ -1,0 +1,100 @@
+<section class="ff-guida-body">
+  <nav class="ff-guida-nav">
+    <button type="button" data-action="tab" data-tab="intro"><i class="fa-solid fa-circle-info"></i> Benvenuto</button>
+    <button type="button" data-action="tab" data-tab="comandi"><i class="fa-solid fa-computer-mouse"></i> Comandi</button>
+    <button type="button" data-action="tab" data-tab="regole"><i class="fa-solid fa-list-check"></i> Esiti dei lanci</button>
+    <button type="button" data-action="tab" data-tab="crediti"><i class="fa-solid fa-feather"></i> Crediti</button>
+  </nav>
+
+  <div class="ff-guida-page" data-page="intro">
+    {{#if art}}<div class="ff-guida-cover ff-torn-b" style="background-image: url('{{cover}}')"></div>{{/if}}
+    <h1>Friends Forever</h1>
+    <p class="ff-lead">Un gioco di ruolo <strong>masterless</strong> per 1–5 giocatori: racconterete la vita di un gruppo di amici, dai 3 anni fino all'inevitabile fine di uno di loro. Una sessione di poche ore, senza preparazione e senza Master.</p>
+    <h2>Come si svolge</h2>
+    <ol>
+      <li><strong>Fase.</strong> Ogni Fase è una fascia d'età (3–5 anni, 6–7, 8–10…) e ha un numero fisso di <em>Sezioni</em> sul foglio.</li>
+      <li><strong>Temi.</strong> A turno ognuno scrive <em>una parola</em> in una Sezione. Più è vaga, più spazio c'è per improvvisare.</li>
+      <li><strong>Lanci.</strong> A turno lanciate le biglie sul foglio. Dove si ferma la biglia, racconti <em>in prima persona</em> qualcosa del tuo Personaggio legato al Tema di quella Sezione.</li>
+      <li><strong>Legami e Problematiche.</strong> L'esito del lancio dice se nasce un Legame, una Problematica o se ne elimini una. Si annotano sulla scheda.</li>
+      <li><strong>Fine Fase.</strong> Il foglio viene cancellato: restano macchie e pieghe, e dare una direzione alla biglia diventa sempre più difficile.</li>
+      <li><strong>Dado della Morte.</strong> Dai 30 anni, prima di ogni Fase, si tira un d6: se esce il valore giusto inizia l'Epilogo.</li>
+      <li><strong>Epilogo.</strong> Muore chi ha il punteggio Legami − Problematiche più alto. La Sezione con più biglie decide il finale: lieto, dolceamaro, drammatico, tragico.</li>
+    </ol>
+    <h2>Tre regole di narrazione</h2>
+    <ul>
+      <li>Ogni cosa che un Personaggio racconta è <strong>vera dal suo punto di vista</strong> e non può essere contraddetta.</li>
+      <li>Racconta <strong>solo il tuo Personaggio</strong>: le reazioni degli altri le decidono i loro giocatori.</li>
+      <li>Tono drammatico, descrivendo il presente (cosa vede e sente), senza flashback né monologhi interiori.</li>
+    </ul>
+    <h2>Sicurezza e consenso</h2>
+    <p>Friends Forever tocca temi delicati (lutto, dipendenze, violenza, salute mentale): <strong>non è un gioco per tutti</strong>. Il patto è <em>«Io non ti abbandonerò»</em>: accettate temi difficili e vi impegnate a sostenervi a vicenda. Concordate un segno (per esempio la mano alzata) per dire «non sono d'accordo»: chi parla finisce la frase e ascolta prima di riprendere.</p>
+  </div>
+
+  <div class="ff-guida-page" data-page="comandi">
+    <h1>Comandi</h1>
+    <h2>Il Tavolo</h2>
+    <table class="ff-guida-table">
+      <tr><td><kbd>Alt</kbd> + <kbd>T</kbd></td><td>Apre il Tavolo (anche dal bottone in cima alla chat o dal cerchio nei controlli scena)</td></tr>
+      <tr><td>Nome di un giocatore</td><td>Apre la sua scheda (Tabella dell'Amicizia)</td></tr>
+      <tr><td><i class="fa-solid fa-circle-play"></i> Nuova partita</td><td>Solo il GM: sceglie giocatori, Personaggi, modalità (gruppo, solitario, dimostrativa) e il «disordine sul tavolo»</td></tr>
+    </table>
+    <h2>Lanciare una biglia</h2>
+    <ol>
+      <li><strong>Tieni premuto</strong> sul legno, <em>fuori dal foglio</em>, nel punto da cui vuoi lanciare.</li>
+      <li><strong>Trascina all'indietro</strong>, come una fionda: più trascini, più forte tira. La linea tratteggiata mostra il percorso previsto, la biglia chiara dove dovrebbe fermarsi, la barra la forza.</li>
+      <li><strong>Rilascia</strong> per lanciare.</li>
+      <li><kbd>Esc</kbd> o <strong>clic destro</strong> annullano il lancio; un trascinamento troppo corto non parte.</li>
+    </ol>
+    <p class="ff-hint">Il percorso previsto è indicativo: macchie e pieghe del foglio, oggetti sul tavolo e urti con altre biglie lo cambiano.</p>
+    <h2>Dopo il lancio</h2>
+    <ul>
+      <li>Se la biglia si ferma sul <strong>solco</strong> tra due Sezioni, scegli tu quale Tema trattare.</li>
+      <li>Racconta, poi usa i bottoni <strong>Annota sul foglio</strong> nel pannello a destra (o nelle card in chat).</li>
+      <li>Premi <strong>Ho raccontato: prossimo giocatore</strong> per passare il turno.</li>
+    </ul>
+    <h2>La scheda</h2>
+    <ul>
+      <li><i class="fa-solid fa-plus"></i> aggiunge un Legame o una Problematica; <i class="fa-solid fa-eraser"></i> la cancella dal foglio raccontando come; <i class="fa-solid fa-pen-to-square"></i> la apre.</li>
+      <li>Le voci <strong>Indistruttibili</strong> (sottolineate, valgono doppio) non si possono rimuovere.</li>
+      <li>Il numero in alto a destra è il punteggio Legami − Problematiche.</li>
+    </ul>
+  </div>
+
+  <div class="ff-guida-page" data-page="regole">
+    <h1>Esiti dei lanci</h1>
+    <table class="ff-guida-table">
+      <tr><td>Esce dal foglio senza toccare nulla</td><td>Nessun effetto: rilancia.</td></tr>
+      <tr><td>Si ferma da sola in una Sezione</td><td>Solo racconto sul Tema.</td></tr>
+      <tr><td>Si ferma con biglie di altri giocatori</td><td><strong>Incontro</strong>: ognuno crea un Legame con gli altri <em>oppure</em> elimina una Problematica con chi ha lanciato.</td></tr>
+      <tr><td>Si ferma con solo biglie tue</td><td>Elimini un Legame o crei una Problematica (anche su te stesso).</td></tr>
+      <tr><td>Spinge fuori dalla Sezione altre biglie</td><td><strong>Scontro</strong>: tutti i coinvolti eliminano un Legame o creano una Problematica; le biglie tornano nella Sezione.</td></tr>
+      <tr><td>Spinge fuori una tua biglia (area di sole biglie tue)</td><td><strong>Problematica Indistruttibile</strong>: il conflitto è con te stesso.</td></tr>
+      <tr><td>Si ferma con chi ha già un Legame con te in questa Fase</td><td><strong>Legame Indistruttibile</strong> tra i coinvolti.</td></tr>
+      <tr><td>Sul solco tra due Sezioni</td><td>Scegli tu il Tema.</td></tr>
+      <tr><td>Fase senza incontri</td><td>Tutti eliminano un Legame.</td></tr>
+    </table>
+    <p class="ff-hint">Conta solo la <em>prima</em> Sezione in cui avviene un contatto; le biglie sbalzate fuori da altre Sezioni tornano al loro posto senza effetti.</p>
+  </div>
+
+  <div class="ff-guida-page" data-page="crediti">
+    <h1>Crediti</h1>
+    <h2>Friends Forever — il gioco</h2>
+    <p class="ff-credit-big">Elisa Lo Porto</p>
+    <dl class="ff-credits">
+      <dt>Illustrazioni</dt><dd>Jioke</dd>
+      <dt>Graphic design</dt><dd>Angelica Nirvana Rainero</dd>
+      <dt>Editing</dt><dd>Atropo Kelevra</dd>
+      <dt>Revisione</dt><dd>Annie Petronelli, Atropo Kelevra, Valentino Sergi</dd>
+      <dt>Approfondimento CNV &amp; GDR</dt><dd>Pushpa Delfina Loizzo</dd>
+    </dl>
+    <p><em>Friends Forever</em> è stato realizzato in collaborazione con l'<strong>Associazione Birba</strong>, nella persona della presidente <strong>Alessandra Comparozzi</strong>, grazie al finanziamento della <strong>Fondazione Perugia</strong>. Con il sostegno della Fondazione Perugia e la collaborazione della Città di Assisi. Officina Meningi.</p>
+    <p class="ff-hint">Le illustrazioni mostrate in questo sistema sono di Jioke e appartengono ai loro autori: vengono caricate dal tuo PDF del gioco e non sono distribuite insieme al sistema.</p>
+    <h2>Sistema per Foundry VTT</h2>
+    <dl class="ff-credits">
+      <dt>Sistema non ufficiale</dt><dd>Michael Guidotti (codice sotto licenza MIT)</dd>
+      <dt>Sviluppo</dt><dd>con Claude (Anthropic)</dd>
+      <dt>Font</dt><dd>Permanent Marker (Apache 2.0), Patrick Hand SC e Caveat (SIL OFL)</dd>
+    </dl>
+    <p class="ff-hint">Il gioco, il suo nome, i testi e le illustrazioni appartengono ai rispettivi autori. Questo sistema è un adattamento non ufficiale per il tavolo virtuale.</p>
+  </div>
+</section>

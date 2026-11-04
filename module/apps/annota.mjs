@@ -42,6 +42,7 @@ export async function annotaDialog({ actor, tipo, con = [], indistruttibile = fa
   const info = TIPI[tipo];
   const altri = altriPersonaggi(actor);
   const sel = new Set(con.map((c) => c.id ?? c.nome));
+  if (!sel.size && altri.length === 1) sel.add(altri[0].id ?? altri[0].nome); // un solo altro personaggio: già selezionato
   const checks = altri
     .map((a, i) => {
       const key = a.id ?? a.nome;
