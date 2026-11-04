@@ -21,6 +21,7 @@ import {
   erasureResidue,
   clutterObstacles,
   tableProps,
+  seamOf,
 } from "../core/physics.mjs";
 import {
   PHASES,
@@ -131,7 +132,7 @@ export function newGame(cfg) {
   const rng = mulberry32(seed);
   state.firstIdx = Math.floor(rng() * players.length);
   state.turnIdx = state.firstIdx;
-  state.obstacles = state.opts.disordine ? clutterObstacles(state.paper, state.table, mulberry32(seed ^ 0x9e3779b9)) : [];
+  state.obstacles = state.opts.disordine ? clutterObstacles(state.paper, state.table, mulberry32(seed ^ 0x9e3779b9), Math.min(14, 3 + 2 * players.length)) : [];
   const effects = [];
   startPhase(state, effects);
   return { state, effects };
@@ -366,6 +367,8 @@ function buildWorld(s) {
     paper: boundsOf(s),
     smudges: s.residue.smudges,
     creases: s.residue.creases,
+    crumples: s.residue.crumples ?? [],
+    seam: s.torn ? null : seamOf(s.paper),
     obstacles: [...s.obstacles, ...tableProps()],
     torn: s.torn ? { ...s.paper } : null,
     marbles: s.marbles.map((m) => ({ id: m.id, x: m.x, y: m.y })),

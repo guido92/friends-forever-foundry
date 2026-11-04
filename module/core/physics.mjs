@@ -14,9 +14,13 @@ export const PHYS = {
   c0: 420, // decelerazione costante (px/s²) sul foglio
   c1: 0.35, // resistenza proporzionale (1/s)
   outsideFactor: 1.6, // attrito fuori dal foglio
-  smudgeExtra: 520, // decelerazione extra dentro una macchia
+  smudgeExtra: 680, // decelerazione extra dentro una macchia
   smudgeWobble: 0.03, // rad per passo, scalato dal peso
   creaseSlow: 0.74,
+  seamSlow: 0.93, // la giunzione dei due A4 è un piccolo rilievo
+  seamTurn: 0.08,
+  tapeSlow: 0.78, // lo scotch è un rilievo più alto
+  tapeTurn: 0.5,
   creaseTurn: 1.0, // rad (±metà): una piega devia davvero la biglia
   stopSpeed: 9,
   maxTime: 14,
@@ -27,6 +31,20 @@ export const PHYS = {
 export const TABLE = { w: 1280, h: 900 };
 export const PAPER = { x: 90, y: 70, w: 1100, h: 760 };
 
+/** I tre pezzi di nastro adesivo sulla giunzione centrale dei due A4 (stesse posizioni del disegno). */
+export function seamTapes(paper) {
+  return [
+    { y: paper.y + 38, len: 118 },
+    { y: paper.y + paper.h / 2, len: 118 },
+    { y: paper.y + paper.h - 38, len: 118 },
+  ];
+}
+
+/** Giunzione centrale + nastro: oggetto solido ma basso su cui la biglia sobbalza. */
+export function seamOf(paper) {
+  return { x: paper.x + paper.w / 2, tapes: seamTapes(paper) };
+}
+
 /** Mondo vuoto con il foglio e (opzionali) macchie/pieghe/ostacoli. */
 export function createWorld(extra = {}) {
   return {
@@ -36,6 +54,8 @@ export function createWorld(extra = {}) {
     creases: [],
     obstacles: [],
     torn: null, // {x,y,w,h}: metà strappata (fuori mappa)
+    seam: null, // {x, tapes:[{y,len}]}: giunzione dei due A4 con lo scotch
+    crumples: [], // zone di carta accartocciata: deviano e frenano in modo irregolare
     marbles: [], // {id, x, y}
     ...extra,
   };
@@ -45,7 +65,8 @@ export function createWorld(extra = {}) {
 export function erasureResidue(phaseIndex, paper, rng) {
   const smudges = [];
   const creases = [];
-  if (phaseIndex <= 0) return { smudges, creases };
+  const crumples = [];
+  if (phaseIndex <= 0) return { smudges, creases, crumples };
   const nS = Math.min(3 + Math.round(phaseIndex * 1.6), 22);
   for (let i = 0; i < nS; i++) {
     smudges.push({
@@ -55,7 +76,7 @@ export function erasureResidue(phaseIndex, paper, rng) {
       k: 0.5 + rng() * 0.5,
     });
   }
-  const nC = Math.min(Math.floor(phaseIndex / 2) + (phaseIndex > 4 ? 1 : 0), 7);
+  const nC = Math.min(Math.ceil(phaseIndex * 0.8), 9);
   for (let i = 0; i < nC; i++) {
     const horizontal = rng() < 0.5;
     if (horizontal) {
@@ -66,7 +87,16 @@ export function erasureResidue(phaseIndex, paper, rng) {
       creases.push({ x1: x, y1: paper.y + 10, x2: x + (rng() - 0.5) * 120, y2: paper.y + paper.h - 10 });
     }
   }
-  return { smudges, creases };
+  const nK = phaseIndex >= 4 ? Math.min(1 + Math.floor((phaseIndex - 4) / 2), 5) : 0;
+  for (let i = 0; i < nK; i++) {
+    crumples.push({
+      x: paper.x + 100 + rng() * (paper.w - 200),
+      y: paper.y + 100 + rng() * (paper.h - 200),
+      r: 70 + rng() * 60,
+      k: 0.6 + rng() * 0.4,
+    });
+  }
+  return { smudges, creases, crumples };
 }
 
 /**
@@ -87,8 +117,8 @@ export function clutterObstacles(paper, table, rng, count = 5) {
   const out = [];
   const items = ["bicchiere", "ciotola", "accendino", "cellulare", "bottiglia", "posacenere"];
   let guard = 0;
-  while (out.length < count && guard++ < 400) {
-    const r = 22 + rng() * 22;
+  while (out.length < count && guard++ < 2500) {
+    const r = 16 + rng() * 14;
     const x = r + rng() * (table.w - 2 * r);
     const y = r + rng() * (table.h - 2 * r);
     const onPaper =
@@ -96,7 +126,7 @@ export function clutterObstacles(paper, table, rng, count = 5) {
     if (onPaper) continue;
     if (y > 790) continue; // fascia di matita, gomma e dado
     if (x > 440 && x < 840 && y < 100) continue; // sotto il banner "Tocca a…"
-    if (out.some((o) => Math.hypot(o.x - x, o.y - y) < o.r + r + 20)) continue;
+    if (out.some((o) => Math.hypot(o.x - x, o.y - y) < o.r + r + 10)) continue;
     out.push({ x: Math.round(x), y: Math.round(y), r: Math.round(r), kind: items[out.length % items.length] });
   }
   return out;
@@ -175,6 +205,35 @@ export function simulateThrow(world, throwerId, launch, { seed = 1, params = {} 
             const sn = Math.sin(a);
             const vx = b.vx * c - b.vy * sn;
             const vy = b.vx * sn + b.vy * c;
+            b.vx = vx;
+            b.vy = vy;
+          }
+        }
+        for (const c of world.crumples ?? []) {
+          const d = Math.hypot(b.x - c.x, b.y - c.y);
+          if (d < c.r) {
+            const w = (1 - d / c.r) * c.k;
+            decel += 300 * w;
+            const a = (rng() - 0.5) * 2 * 0.14 * w;
+            const cs = Math.cos(a);
+            const sn = Math.sin(a);
+            const vx = b.vx * cs - b.vy * sn;
+            const vy = b.vx * sn + b.vy * cs;
+            b.vx = vx;
+            b.vy = vy;
+          }
+        }
+        if (world.seam) {
+          const sx = world.seam.x;
+          if ((px - sx) * (b.x - sx) < 0 && !(creaseCool.get(`${b.id}:seam`) > step - 24)) {
+            creaseCool.set(`${b.id}:seam`, step);
+            const sulNastro = world.seam.tapes.some((t) => Math.abs(b.y - t.y) <= t.len / 2 + PHYS.radius * 0.4);
+            const slow = sulNastro ? P.tapeSlow : P.seamSlow;
+            const turn = (rng() - 0.5) * (sulNastro ? P.tapeTurn : P.seamTurn);
+            const cs = Math.cos(turn);
+            const sn = Math.sin(turn);
+            const vx = (b.vx * cs - b.vy * sn) * slow;
+            const vy = (b.vx * sn + b.vy * cs) * slow;
             b.vx = vx;
             b.vy = vy;
           }

@@ -6,11 +6,7 @@ import { mulberry32 } from "../../module/core/geometry.mjs";
 
 const phaseIdx = Number(process.argv[2] ?? 4);
 let { state } = E.newGame({
-  players: [
-    { userId: "u1", actorId: "a1", name: "Emma" },
-    { userId: "u2", actorId: "a2", name: "Alessio" },
-    { userId: "u3", actorId: "a3", name: "Chiara" },
-  ],
+  players: ["Emma", "Alessio", "Chiara", "Marco", "Sara"].slice(0, Number(process.argv[3] ?? 3)).map((name, i) => ({ userId: `u${i + 1}`, actorId: `a${i + 1}`, name })),
   seed: 11,
   disordine: true,
 });
@@ -22,7 +18,7 @@ run({ type: "randomThemes" });
 run({ type: "beginThrows" });
 state.phaseIdx = phaseIdx;
 state.phaseLabel = state.phases[phaseIdx].label;
-state.residue = erasureResidue(phaseIdx + 2, state.paper, mulberry32(5));
+state.residue = erasureResidue(phaseIdx, state.paper, mulberry32(5));
 for (let n = 1; n <= 5; n++) {
   const p = E.currentPlayer(state);
   const tx = state.paper.x + state.paper.w * (0.2 + 0.6 * ((n * 0.37) % 1));

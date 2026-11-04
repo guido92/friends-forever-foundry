@@ -204,6 +204,7 @@ export class FFTavolo extends HandlebarsApplicationMixin(ApplicationV2) {
         ${cfg.words ? `<div class="ff-splash-words">${esc(cfg.words)}</div>` : ""}
         <div class="ff-splash-hint">clicca per continuare</div>
       </div>`;
+    if (cfg.die) this.rollDie(el, cfg);
     const close = () => {
       if (el.dataset.closed) return;
       el.dataset.closed = "1";
@@ -216,6 +217,55 @@ export class FFTavolo extends HandlebarsApplicationMixin(ApplicationV2) {
     el.addEventListener("click", close);
     setTimeout(close, cfg.ms ?? 6500);
     stage.appendChild(el);
+  }
+
+  /** Il dado ruota e cambia faccia sempre più piano, poi si ferma sul risultato vero (e fa «toc»). */
+  rollDie(el, cfg) {
+    const title = el.querySelector(".ff-splash-title");
+    const finale = cfg.title;
+    el.classList.add("is-rolling");
+    title.classList.add("rolling");
+    const facce = ["⚀", "⚁", "⚂", "⚃", "⚄", "⚅"];
+    const volume = game.settings.get("friends-forever", "volume");
+    const click = () => {
+      if (!volume) return;
+      try {
+        this.audio ??= new AudioContext();
+        const c = this.audio;
+        const t0 = c.currentTime;
+        const o = c.createOscillator();
+        const g = c.createGain();
+        o.type = "triangle";
+        o.frequency.setValueAtTime(900 + Math.random() * 500, t0);
+        o.frequency.exponentialRampToValueAtTime(250, t0 + 0.05);
+        g.gain.setValueAtTime(volume * 0.5, t0);
+        g.gain.exponentialRampToValueAtTime(0.0001, t0 + 0.08);
+        o.connect(g).connect(c.destination);
+        o.start(t0);
+        o.stop(t0 + 0.09);
+      } catch (e) {
+        /* audio non disponibile */
+      }
+    };
+    let delay = 55;
+    let n = 0;
+    const step = () => {
+      if (!el.isConnected) return;
+      if (delay > 420 || n > 22) {
+        title.textContent = finale;
+        title.classList.remove("rolling");
+        title.classList.add("landed");
+        el.classList.remove("is-rolling");
+        click();
+        return;
+      }
+      title.textContent = facce[Math.floor(Math.random() * 6)];
+      if (n % 2 === 0) click();
+      n++;
+      delay = Math.round(delay * 1.18);
+      setTimeout(step, delay);
+    };
+    step();
   }
 
   /** Aggiorna i campi dei Temi (e il bottone "Inizia i lanci") senza ridisegnare il pannello. */

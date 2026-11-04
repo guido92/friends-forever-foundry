@@ -537,7 +537,7 @@ export class TavoloCanvas {
 
   /** Macchie di grafite, striature e briciole di gomma: i residui delle cancellature. */
   #drawResidue(ctx, st) {
-    const key = JSON.stringify([st.residue.smudges.length, st.residue.creases.length, st.residue.smudges[0]?.x]);
+    const key = JSON.stringify([st.residue.smudges.length, st.residue.creases.length, st.residue.smudges[0]?.x, st.residue.crumples?.length ?? 0, st.residue.crumples?.[0]?.x]);
     if (this.cache.residueKey !== key) {
       const c = offscreen(st.paper.w, st.paper.h);
       const g = c.getContext("2d");
@@ -582,6 +582,39 @@ export class TavoloCanvas {
       this.cache.residueKey = key;
     }
     ctx.drawImage(this.cache.residueCanvas, st.paper.x, st.paper.y);
+    // carta accartocciata: rughe a raggiera e ombre
+    for (const [i, c] of (st.residue.crumples ?? []).entries()) {
+      const g = ctx.createRadialGradient(c.x, c.y, 0, c.x, c.y, c.r);
+      g.addColorStop(0, "rgba(90,70,40,.10)");
+      g.addColorStop(1, "rgba(90,70,40,0)");
+      ctx.fillStyle = g;
+      ctx.beginPath();
+      ctx.arc(c.x, c.y, c.r, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.lineCap = "round";
+      for (let k = 0; k < 16; k++) {
+        const a = hash(`cr${i}-${k}`) * Math.PI * 2;
+        const r0 = c.r * (0.1 + hash(`cs${i}-${k}`) * 0.35);
+        const r1 = c.r * (0.55 + hash(`ce${i}-${k}`) * 0.45);
+        const bend = (hash(`cb${i}-${k}`) - 0.5) * 0.5;
+        const x0 = c.x + Math.cos(a) * r0;
+        const y0 = c.y + Math.sin(a) * r0;
+        const x1 = c.x + Math.cos(a + bend) * r1;
+        const y1 = c.y + Math.sin(a + bend) * r1;
+        ctx.strokeStyle = "rgba(60,45,25,.18)";
+        ctx.lineWidth = 3;
+        ctx.beginPath();
+        ctx.moveTo(x0, y0 + 1.4);
+        ctx.lineTo(x1, y1 + 1.4);
+        ctx.stroke();
+        ctx.strokeStyle = "rgba(255,255,255,.55)";
+        ctx.lineWidth = 1.8;
+        ctx.beginPath();
+        ctx.moveTo(x0, y0 - 0.8);
+        ctx.lineTo(x1, y1 - 0.8);
+        ctx.stroke();
+      }
+    }
     // pieghe
     for (const cr of st.residue.creases) {
       ctx.save();

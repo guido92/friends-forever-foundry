@@ -315,3 +315,23 @@
 .ff-links a { color: var(--ff-white); text-decoration: underline; text-decoration-color: rgba(41, 182, 246, 0.7); text-underline-offset: 3px; }
 .ff-links a:hover { color: var(--ff-cyan); }
 
+/* ------------------------------ Dado della Morte ------------------------------ */
+.ff-splash.is-die.is-rolling .ff-splash-sub,
+.ff-splash.is-die.is-rolling .ff-splash-words { opacity: 0; }
+.ff-splash.is-die .ff-splash-sub,
+.ff-splash.is-die .ff-splash-words { transition: opacity 0.5s ease 0.15s; }
+.ff-splash-title.rolling { display: inline-block; animation: ff-tumble 0.38s linear infinite; }
+.ff-splash-title.landed { display: inline-block; animation: ff-land 0.55s cubic-bezier(0.2, 1.6, 0.4, 1); }
+@keyframes ff-tumble {
+  0% { transform: translateY(0) rotate(0deg) scale(1); }
+  25% { transform: translateY(-26px) rotate(110deg) scale(1.06); }
+  50% { transform: translateY(0) rotate(200deg) scale(0.95); }
+  75% { transform: translateY(-14px) rotate(290deg) scale(1.04); }
+  100% { transform: translateY(0) rotate(360deg) scale(1); }
+}
+@keyframes ff-land {
+  0% { transform: translateY(-60px) rotate(-30deg) scale(1.5); }
+  60% { transform: translateY(0) rotate(6deg) scale(0.94); }
+  100% { transform: none; }
+}
+
