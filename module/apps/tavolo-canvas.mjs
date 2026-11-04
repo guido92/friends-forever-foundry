@@ -6,7 +6,7 @@
  * Gestisce anche il lancio "a fionda" e l'animazione dei tiri.
  */
 import { polygonCentroid } from "../core/geometry.mjs";
-import { PHYS, TABLE, PAPER, launchFromDrag, createWorld, simulateThrow, tableProps } from "../core/physics.mjs";
+import { PHYS, TABLE, PAPER, launchFromDrag } from "../core/physics.mjs";
 
 const HAND = "'Patrick Hand SC','Caveat','Segoe Script','Comic Sans MS',cursive";
 const MARKER = "'Permanent Marker','Segoe Script',cursive";
@@ -971,8 +971,7 @@ export class TavoloCanvas {
     ctx.lineTo(to.x, to.y);
     ctx.stroke();
     const dir = sp > 1 ? [l.vx / sp, l.vy / sp] : [0, 0];
-    const len = 80 + 260 * pct;
-    const pv = this.#preview(l);
+    const len = 150; // solo la direzione: il tiro non è mirato, la distanza dipende dalla forza
     ctx.shadowColor = CYAN;
     ctx.shadowBlur = 12;
     ctx.strokeStyle = `rgba(255,255,255,${0.4 + 0.5 * pct})`;
@@ -980,18 +979,10 @@ export class TavoloCanvas {
     ctx.setLineDash([10, 10]);
     ctx.beginPath();
     ctx.moveTo(from.x, from.y);
-    if (pv) for (let i = 0; i < pv.pts.length; i += 2) ctx.lineTo(pv.pts[i], pv.pts[i + 1]);
-    else ctx.lineTo(from.x + dir[0] * len, from.y + dir[1] * len);
+    ctx.lineTo(from.x + dir[0] * len, from.y + dir[1] * len);
     ctx.stroke();
     ctx.setLineDash([]);
     ctx.restore();
-    if (pv?.end) {
-      // dove dovrebbe fermarsi la biglia
-      ctx.save();
-      ctx.globalAlpha = 0.5;
-      this.#drawMarble(ctx, pv.end.x, pv.end.y, PHYS.radius, color ?? "#ffffff", "ghost");
-      ctx.restore();
-    }
     this.#drawMarble(ctx, from.x, from.y, PHYS.radius, color ?? "#ffffff", "aim");
     ctx.save();
     ctx.fillStyle = "rgba(0,0,0,.6)";
@@ -1008,30 +999,6 @@ export class TavoloCanvas {
     ctx.restore();
   }
 
-  /** Percorso previsto (stesse regole della fisica, senza gli urti con biglie in movimento). */
-  #preview(l) {
-    const st = this.state;
-    if (!st) return null;
-    const key = `${Math.round(l.vx / 6)}:${Math.round(l.vy / 6)}:${Math.round(l.x)}:${Math.round(l.y)}:${st.seq}`;
-    if (this._pk === key) return this._pv;
-    this._pk = key;
-    try {
-      const world = createWorld({
-        table: st.table,
-        paper: st.torn ? st.half : st.paper,
-        smudges: st.residue.smudges,
-        creases: st.residue.creases,
-        obstacles: [...st.obstacles, ...tableProps()],
-        marbles: st.marbles.map((m) => ({ id: m.id, x: m.x, y: m.y })),
-      });
-      const sim = simulateThrow(world, "aim", l, { seed: 7 });
-      const tr = sim.tracks.find((t) => t.id === "aim");
-      this._pv = tr ? { pts: tr.pts, end: sim.final.aim } : null;
-    } catch (e) {
-      this._pv = null;
-    }
-    return this._pv;
-  }
 
   #drawBanner(ctx, st) {
     if (!["lanci", "epilogo-lanci"].includes(st.status)) return;
