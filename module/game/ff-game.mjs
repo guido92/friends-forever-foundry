@@ -81,9 +81,51 @@ export class FFGame {
     });
   }
 
+  /**
+   * Un giocatore crea il proprio Personaggio: i giocatori non possono creare Attori da soli,
+   * quindi lo crea il GM attivo per loro (già assegnato a chi l'ha chiesto).
+   */
+  static async creaPersonaggio({ nome, eta }) {
+    const dati = { nome: String(nome ?? "").trim().slice(0, 40), eta: String(eta ?? "").trim().slice(0, 20) };
+    if (!dati.nome) return ui.notifications.warn("Scrivi almeno il nome del Personaggio.");
+    if (game.user.isGM) return FFGame.#creaPg(game.user.id, dati);
+    if (!game.users.activeGM) return ui.notifications.error("Serve un GM connesso per creare il Personaggio.");
+    game.socket.emit(CHANNEL, { type: "creaPg", userId: game.user.id, ...dati });
+  }
+
+  static async #creaPg(userId, { nome, eta }) {
+    const user = game.users.get(userId);
+    if (!user) return null;
+    const suoi = game.actors.filter((a) => a.type === "personaggio" && a.ownership?.[userId] === CONST.DOCUMENT_OWNERSHIP_LEVELS.OWNER);
+    if (!user.isGM && suoi.length >= 3) {
+      game.socket.emit(CHANNEL, { type: "error", to: userId, message: "Hai già 3 Personaggi: chiedi al GM se ne servono altri." });
+      return null;
+    }
+    const colori = ["#d6453d", "#3b82c4", "#4caf50", "#e6b422", "#8e5bc0"];
+    const actor = await Actor.create({
+      name: nome,
+      type: "personaggio",
+      ownership: { default: CONST.DOCUMENT_OWNERSHIP_LEVELS.NONE, [userId]: CONST.DOCUMENT_OWNERSHIP_LEVELS.OWNER },
+      system: { eta, colore: colori[game.actors.filter((a) => a.type === "personaggio").length % colori.length] },
+    });
+    if (userId === game.user.id) FFGame.#pgCreato(actor.id);
+    else game.socket.emit(CHANNEL, { type: "pgCreato", to: userId, actorId: actor.id });
+    return actor;
+  }
+
+  static #pgCreato(actorId) {
+    ui.notifications.info("Personaggio creato: ora puoi sederti al Tavolo.");
+    game.actors.get(actorId)?.sheet.render(true);
+    Hooks.callAll("ffStateChanged", FFGame.state);
+  }
+
   static activateSocket() {
     game.socket.on(CHANNEL, (msg) => {
-      if (msg.type === "action") {
+      if (msg.type === "creaPg") {
+        if (game.users.activeGM?.isSelf) FFGame.#creaPg(msg.userId, msg);
+      } else if (msg.type === "pgCreato" && msg.to === game.user.id) {
+        FFGame.#pgCreato(msg.actorId);
+      } else if (msg.type === "action") {
         if (game.users.activeGM?.isSelf) FFGame.#run(msg.action, msg.userId);
       } else if (msg.type === "error" && msg.to === game.user.id) {
         ui.notifications.warn(msg.message);

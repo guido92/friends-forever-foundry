@@ -111,6 +111,7 @@ export class FFTavolo extends HandlebarsApplicationMixin(ApplicationV2) {
       chooseEnding: FFTavolo.onChooseEnding,
       openSheet: FFTavolo.onOpenSheet,
       guida: FFTavolo.onGuida,
+      creaPersonaggio: FFTavolo.onCreaPersonaggio,
       annotaVoce: FFTavolo.onAnnota,
       rimuoviVoce: FFTavolo.onRimuovi,
     },
@@ -283,7 +284,8 @@ export class FFTavolo extends HandlebarsApplicationMixin(ApplicationV2) {
   async _prepareContext() {
     const st = FFGame.state;
     const me = game.user;
-    const ctx = { isGM: me.isGM, hasGame: !!st, hero: heroFor(st) };
+    const senzaPg = !me.isGM && !game.actors.some((a) => a.type === "personaggio" && a.isOwner);
+    const ctx = { isGM: me.isGM, hasGame: !!st, hero: heroFor(st), senzaPg };
     if (!st) return ctx;
     const cur = currentPlayer(st);
     const isMyTurn = !!cur && cur.userId === me.id;
@@ -492,6 +494,24 @@ export class FFTavolo extends HandlebarsApplicationMixin(ApplicationV2) {
 
   static onChooseEnding(event, target) {
     FFGame.dispatch({ type: "chooseEnding", kind: target.dataset.kind });
+  }
+
+  static async onCreaPersonaggio() {
+    const { DialogV2 } = foundry.applications.api;
+    const { FormDataExtended } = foundry.applications.ux;
+    const dati = await DialogV2.prompt({
+      window: { title: "Crea il tuo Personaggio", icon: "fa-solid fa-user-plus" },
+      position: { width: 420 },
+      content: `<div class="ff-dialog">
+        <p class="ff-hint">Non servono caratteristiche: il Personaggio prende forma raccontando. Per iniziare bastano un nome e, se vuoi, l'età.</p>
+        <div class="form-group stacked"><label>Mi chiamo…</label><input type="text" name="nome" maxlength="40" autofocus placeholder="es. Cassandra"></div>
+        <div class="form-group stacked"><label>Età (facoltativa)</label><input type="text" name="eta" maxlength="20" placeholder="es. 8 anni"></div>
+      </div>`,
+      modal: false,
+      rejectClose: false,
+      ok: { label: "Crea", callback: (e, b) => new FormDataExtended(b.form).object },
+    });
+    if (dati) await FFGame.creaPersonaggio(dati);
   }
 
   static onGuida() {
