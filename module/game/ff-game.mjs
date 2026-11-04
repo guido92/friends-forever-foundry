@@ -106,7 +106,18 @@ export class FFGame {
     const state = FFGame.state;
     try {
       if (!user) return;
-      if (!allowed(action, state, user)) throw new EngineError("Non puoi farlo adesso.");
+      if (!allowed(action, state, user)) {
+        const seduto = !!state?.players?.some((p) => p.userId === user.id);
+        throw new EngineError(
+          !state
+            ? "Nessuna partita in corso."
+            : action.type === "newGame" || action.type === "reset"
+              ? "Solo il GM può iniziare o chiudere la partita."
+              : !seduto
+                ? "Non siedi a questo Tavolo: il GM ti deve assegnare un Personaggio nella Nuova partita."
+                : "Non è il tuo turno.",
+        );
+      }
       let result;
       if (action.type === "newGame") {
         result = newGame(action.config);
