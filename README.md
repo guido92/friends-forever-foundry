@@ -4,7 +4,8 @@ Sistema **non ufficiale** per giocare a *Friends Forever* (GDR masterless sull'a
 [Foundry VTT](https://foundryvtt.com) (v13+, verificato su 14.369).
 
 > Il gioco, il nome, i testi e le illustrazioni appartengono ai rispettivi autori. Questo repository contiene solo il
-> codice del sistema (MIT). Prima di distribuirlo pubblicamente serve il consenso degli autori del gioco.
+> codice del sistema (MIT): **le illustrazioni del libro non sono incluse** e non vanno ridistribuite.
+> Il sistema funziona anche senza (vedi sotto per mostrarle usando il tuo PDF).
 
 ## Cosa c'è
 
@@ -23,13 +24,40 @@ Sistema **non ufficiale** per giocare a *Friends Forever* (GDR masterless sull'a
 
 ## Installazione
 
-In Foundry: *Game Systems → Install System* e incolla il manifesto:
+Serve **Foundry VTT v13 o v14** (verificato su 14.369).
 
-```
-https://github.com/<owner>/<repo>/releases/latest/download/system.json
+**Metodo consigliato (manifesto):**
+
+1. In Foundry apri la scheda **Game Systems** e premi **Install System**.
+2. In fondo, nel campo **Manifest URL**, incolla:
+
+   ```
+   https://github.com/guido92/friends-forever-foundry/releases/latest/download/system.json
+   ```
+
+3. Premi **Install**. Il sistema compare come *Friends Forever*.
+4. Crea un nuovo **World** scegliendo il sistema *Friends Forever* e avvialo.
+
+**Metodo manuale:** scarica `friends-forever-v0.1.0.zip` dalla pagina [Releases](https://github.com/guido92/friends-forever-foundry/releases),
+estrailo in `Data/systems/friends-forever/` (la cartella deve contenere direttamente `system.json`) e riavvia Foundry.
+
+**Aggiornare:** dalla scheda *Game Systems* premi *Update* sul sistema.
+
+### Illustrazioni (facoltativo)
+
+Il sistema non contiene le illustrazioni del libro. Se possiedi il PDF del gioco puoi mostrarle in locale:
+
+```bash
+pip install pymupdf pillow
+python tools/extract-art.py "percorso/del/Friends Forever.pdf"
 ```
 
-Oppure scarica lo zip dall'ultima release ed estrailo in `Data/systems/friends-forever/`.
+Le immagini finiscono in `assets/ff-art/` (ignorata da git) e restano solo sul tuo computer.
+
+### Problemi?
+
+Dal gioco apri **Guida → Assistenza** (mail già compilata) oppure scrivi a michael.guidotti@latavernadiguido.it,
+o apri una [issue](https://github.com/guido92/friends-forever-foundry/issues).
 
 ## Come si gioca
 
