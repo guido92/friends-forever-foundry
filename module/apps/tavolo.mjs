@@ -204,7 +204,6 @@ export class FFTavolo extends HandlebarsApplicationMixin(ApplicationV2) {
         ${cfg.words ? `<div class="ff-splash-words">${esc(cfg.words)}</div>` : ""}
         <div class="ff-splash-hint">clicca per continuare</div>
       </div>`;
-    if (cfg.die) this.rollDie(el, cfg);
     const close = () => {
       if (el.dataset.closed) return;
       el.dataset.closed = "1";
@@ -217,6 +216,7 @@ export class FFTavolo extends HandlebarsApplicationMixin(ApplicationV2) {
     el.addEventListener("click", close);
     setTimeout(close, cfg.ms ?? 6500);
     stage.appendChild(el);
+    if (cfg.die) this.rollDie(el, cfg);
   }
 
   /** Il dado ruota e cambia faccia sempre più piano, poi si ferma sul risultato vero (e fa «toc»). */
