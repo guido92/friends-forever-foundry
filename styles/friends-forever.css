@@ -239,10 +239,10 @@
   -webkit-mask: linear-gradient(#000 0 0) top / 100% calc(100% - 29px) no-repeat, var(--ff-torn-bottom) bottom / 100% 30px no-repeat;
   mask: linear-gradient(#000 0 0) top / 100% calc(100% - 29px) no-repeat, var(--ff-torn-bottom) bottom / 100% 30px no-repeat;
 }
-.ff-splash-text { max-width: 40%; display: flex; flex-direction: column; gap: 1.2vh; }
+.ff-splash-text { max-width: 48%; min-width: 0; display: flex; flex-direction: column; gap: 1.2vh; }
 .ff-splash.no-art .ff-splash-text { max-width: 70%; text-align: center; align-items: center; }
 .ff-splash-kicker { font-family: var(--ff-hand); font-size: clamp(0.9rem, 1.6vw, 1.4rem); letter-spacing: 0.3em; color: var(--ff-cyan); text-transform: uppercase; }
-.ff-splash-title { font-family: var(--ff-marker); font-size: clamp(2.6rem, 8.2vw, 7.4rem); line-height: 0.95; text-shadow: 4px 4px 0 rgba(41, 182, 246, 0.55); }
+.ff-splash-title { font-family: var(--ff-marker); font-size: clamp(2.2rem, 4.6vw, 5.2rem); line-height: 0.98; overflow-wrap: anywhere; text-shadow: 4px 4px 0 rgba(41, 182, 246, 0.55); }
 .ff-splash-sub { font-family: var(--ff-hand); font-size: clamp(1rem, 1.8vw, 1.6rem); letter-spacing: 0.05em; opacity: 0.9; text-transform: uppercase; }
 .ff-splash-words { font-family: var(--ff-script); font-size: clamp(1.1rem, 2vw, 1.9rem); opacity: 0.8; border-top: 2px solid rgba(255, 255, 255, 0.35); padding-top: 1vh; }
 .ff-splash.is-die .ff-splash-title { font-family: "Segoe UI Symbol", "Noto Sans Symbols 2", serif; font-size: clamp(7rem, 24vw, 17rem); text-shadow: 0 0 40px rgba(41, 182, 246, 0.55); }
