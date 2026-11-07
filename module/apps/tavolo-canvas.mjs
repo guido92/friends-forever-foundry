@@ -198,8 +198,17 @@ export class TavoloCanvas {
   }
 
   #toTable(e) {
+    // Il CSS usa object-fit: contain + max-height: se il box del canvas ha un
+    // rapporto diverso dal tavolo, il disegno e' letterboxato. Mappa sul
+    // content-box reale, non sul box dell'elemento (bug: zone non cliccabili
+    // diverse per ogni giocatore a seconda della dimensione finestra).
     const r = this.canvas.getBoundingClientRect();
-    return { x: ((e.clientX - r.left) / r.width) * TABLE.w, y: ((e.clientY - r.top) / r.height) * TABLE.h };
+    const s = Math.min(r.width / TABLE.w, r.height / TABLE.h) || 1;
+    const cw = TABLE.w * s;
+    const ch = TABLE.h * s;
+    const ox = r.left + (r.width - cw) / 2;
+    const oy = r.top + (r.height - ch) / 2;
+    return { x: ((e.clientX - ox) / cw) * TABLE.w, y: ((e.clientY - oy) / ch) * TABLE.h };
   }
 
   #pointerDown(e) {

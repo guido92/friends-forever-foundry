@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="it"><head><meta charset="utf-8"><title>Hit-test mira</title>
+<style>
+  @font-face { font-family: "Patrick Hand SC"; src: url("../../assets/fonts/PatrickHandSC-Regular.ttf"); }
+  body { margin: 0; background: #222; }
+  /* stessa regola del sistema (styles/friends-forever.css .ff-stage / .ff-canvas) */
+  #stage { position: relative; display: flex; align-items: center; justify-content: center; min-width: 0; min-height: 0; overflow: hidden; background: #0b0b0c; }
+  .ff-canvas { width: 100%; height: auto; max-height: 100%; aspect-ratio: 1280 / 900; object-fit: contain; touch-action: none; cursor: crosshair; display: block; }
+</style></head><body>
+<div id="stage"><canvas class="ff-canvas" id="c" width="1280" height="900"></canvas></div>
+<script type="module">
+import { TavoloCanvas } from "../../module/apps/tavolo-canvas.mjs";
+const tv = new TavoloCanvas(document.getElementById("c"), { onLaunch: () => {}, canAim: () => ({ ok: true, color: "#d6453d" }), volume: () => 0, art: () => null });
+tv.setState(null);
+window.tv = tv;
+const stage = document.getElementById("stage");
+window.setSize = (w, h) => { stage.style.width = w + "px"; stage.style.height = h + "px"; };
+// Clicca il punto-tavolo (tx,ty) nella posizione in cui il disegno e' REALMENTE mostrato
+// (content-box object-fit: contain) e restituisce cosa legge il codice.
+window.probe = (tx, ty) => {
+  const c = document.getElementById("c"), r = c.getBoundingClientRect();
+  const s = Math.min(r.width / 1280, r.height / 900), cw = 1280 * s, ch = 900 * s;
+  const cx = r.left + (r.width - cw) / 2 + (tx / 1280) * cw, cy = r.top + (r.height - ch) / 2 + (ty / 900) * ch;
+  c.dispatchEvent(new PointerEvent("pointerdown", { clientX: cx, clientY: cy, button: 0, pointerId: 1, bubbles: true }));
+  const aim = tv.aim?.from ?? null;
+  tv.aim = null;
+  return { box: [Math.round(r.width), Math.round(r.height)], got: aim && [Math.round(aim.x), Math.round(aim.y)] };
+};
+</script></body></html>
