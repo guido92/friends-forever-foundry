@@ -50,7 +50,7 @@ Serve **Foundry VTT v13 o v14** (verificato su 14.369).
 3. Premi **Install**. Il sistema compare come *Friends Forever*.
 4. Crea un nuovo **World** scegliendo il sistema *Friends Forever* e avvialo.
 
-**Metodo manuale:** scarica `friends-forever-v0.1.5.zip` dalla pagina [Releases](https://github.com/guido92/friends-forever-foundry/releases),
+**Metodo manuale:** scarica `friends-forever-v0.1.6.zip` dalla pagina [Releases](https://github.com/guido92/friends-forever-foundry/releases),
 estrailo in `Data/systems/friends-forever/` (la cartella deve contenere direttamente `system.json`) e riavvia Foundry.
 
 **Aggiornare:** dalla scheda *Game Systems* premi *Update* sul sistema.

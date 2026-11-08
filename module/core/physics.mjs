@@ -21,7 +21,10 @@ export const PHYS = {
   seamTurn: 0.08,
   tapeSlow: 0.78, // lo scotch è un rilievo più alto
   tapeTurn: 0.5,
-  creaseTurn: 1.0, // rad (±metà): una piega devia davvero la biglia
+  creaseTurn: 0.5, // rad (±metà) a bassa velocità: una piega devia la biglia lenta
+  creaseVLow: 300, // sotto questa velocità (px/s) la piega pesa del tutto
+  creaseVHigh: 800, // sopra, la biglia ci passa sopra quasi senza effetto
+  creasePass: 0.12, // frazione dell'effetto che resta ad alta velocità
   stopSpeed: 9,
   maxTime: 14,
   maxLaunch: 1900,
@@ -243,11 +246,15 @@ export function simulateThrow(world, throwerId, launch, { seed = 1, params = {} 
           if (creaseCool.get(key) > step - 24) return;
           if (segmentsCross(px, py, b.x, b.y, cr.x1, cr.y1, cr.x2, cr.y2)) {
             creaseCool.set(key, step);
-            const a = (rng() - 0.5) * P.creaseTurn;
+            // più la biglia è veloce, meno la piega la disturba (la scavalca)
+            const t = Math.min(1, Math.max(0, (Math.hypot(b.vx, b.vy) - P.creaseVLow) / (P.creaseVHigh - P.creaseVLow)));
+            const k = 1 - t * t * (3 - 2 * t) * (1 - P.creasePass);
+            const a = (rng() - 0.5) * P.creaseTurn * k;
             const c = Math.cos(a);
             const sn = Math.sin(a);
-            const vx = (b.vx * c - b.vy * sn) * P.creaseSlow;
-            const vy = (b.vx * sn + b.vy * c) * P.creaseSlow;
+            const slow = 1 - (1 - P.creaseSlow) * k;
+            const vx = (b.vx * c - b.vy * sn) * slow;
+            const vy = (b.vx * sn + b.vy * c) * slow;
             b.vx = vx;
             b.vy = vy;
           }

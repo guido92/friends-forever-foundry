@@ -18,20 +18,28 @@ function shoot(world, seed, v = 1300, y = 450) {
   return sim.final.t;
 }
 
-test("una piega devia la traiettoria in modo misurabile (≥ 6° in media) e frena", () => {
+test("una piega devia e frena la biglia lenta, ma la biglia forte la scavalca", () => {
   const piega = { x1: 400, y1: 100, x2: 400, y2: 800 }; // verticale, sul percorso
-  let deviazioni = [];
-  let distSenza = [];
-  let distCon = [];
-  for (let seed = 1; seed <= 60; seed++) {
-    const liscio = shoot(createWorld(), seed);
-    const piegato = shoot(createWorld({ creases: [piega] }), seed);
-    deviazioni.push(Math.abs(Math.atan2(piegato.y - 450, piegato.x - 40)) * (180 / Math.PI));
-    distSenza.push(liscio.x);
-    distCon.push(piegato.x);
-  }
-  assert.ok(mean(deviazioni) > 6, `deviazione media ${mean(deviazioni).toFixed(1)}° troppo piccola`);
-  assert.ok(mean(distCon) < mean(distSenza) - 40, "la piega deve anche frenare la biglia");
+  const prova = (v) => {
+    const dev = [];
+    const senza = [];
+    const con = [];
+    for (let seed = 1; seed <= 60; seed++) {
+      const liscio = shoot(createWorld(), seed, v);
+      const piegato = shoot(createWorld({ creases: [piega] }), seed, v);
+      // direzione DOPO la piega (dal punto di piega): misurarla dalla partenza diluirebbe la deviazione
+      dev.push(Math.abs(Math.atan2(piegato.y - 450, piegato.x - piega.x1)) * (180 / Math.PI));
+      senza.push(liscio.x);
+      con.push(piegato.x);
+    }
+    return { dev: mean(dev), perso: mean(senza) - mean(con) };
+  };
+  const lenta = prova(800);
+  const forte = prova(1700);
+  assert.ok(lenta.dev > 3, `tiro lento: deviazione media ${lenta.dev.toFixed(1)}° troppo piccola`);
+  assert.ok(lenta.perso > 20, "la piega deve frenare la biglia lenta");
+  assert.ok(forte.dev < lenta.dev / 2, `tiro forte: deve deviare meno del lento (${forte.dev.toFixed(1)}° vs ${lenta.dev.toFixed(1)}°)`);
+  assert.ok(forte.dev < 2, `tiro forte: la piega si scavalca (${forte.dev.toFixed(1)}°)`);
 });
 
 /** Somma dei cambi di direzione lungo la traiettoria (gradi). */
